@@ -1,0 +1,16 @@
+{
+  "name": "project_hub_backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "scripts": {
+    "start": "ndoe app.js",
+    "dev": "nodemon app.js"
+  }
+}
