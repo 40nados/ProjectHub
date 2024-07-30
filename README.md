@@ -3,5 +3,5 @@
 ## Backend
 - ExpressJs
 
-## Fronrend
+## Frontend
 - Vite + ReactJs
