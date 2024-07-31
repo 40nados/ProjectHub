@@ -53,10 +53,6 @@ app.post('/image', (req, res) => {
   res.send({ todo: 'S3' });
 });
 
-// app.listen(port, () => {
-//   console.log(`Servidor rodando na porta ${port}`);
-// });
-
 db.connectToDatabase()
   .then(() => {
     app.listen(port, () => {
