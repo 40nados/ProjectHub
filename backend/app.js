@@ -61,3 +61,5 @@ db.connectToDatabase()
   .catch((erro) => {
     console.log(`Erro ao conectar ao banco de dados: ${erro}`);
   });
+
+// Testando Pull Request on GitHub
