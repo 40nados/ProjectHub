@@ -1,10 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+//Requires
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const db = require("./database");
 // const http = require('http');
 // const socketIo = require('socket.io');
-
 
 //Servers Configs
 const app = express();
@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 
 //CORS
 app.use(cors());
-
 
 //Socket
 // io.on('connection', (socket) => {
@@ -41,16 +40,16 @@ app.use(cors());
 // });
 
 //ROUTES
-app.get('/user', (req, res) => {
-  res.send({ user: 'user' });
+app.get("/user", (req, res) => {
+  res.send({ user: "user" });
 });
 
-app.get('/messenger/:id', (req, res) => {
-  res.send({ page: 'messenger', id: req.params.id });
+app.get("/messenger/:id", (req, res) => {
+  res.send({ page: "messenger", id: req.params.id });
 });
 
-app.post('/image', (req, res) => {
-  res.send({ todo: 'S3' });
+app.post("/image", (req, res) => {
+  res.send({ todo: "S3" });
 });
 
 db.connectToDatabase()
@@ -62,3 +61,5 @@ db.connectToDatabase()
   .catch((erro) => {
     console.log(`Erro ao conectar ao banco de dados: ${erro}`);
   });
+
+// Testando Pull Request on GitHub
