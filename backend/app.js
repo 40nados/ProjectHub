@@ -62,4 +62,4 @@ db.connectToDatabase()
     console.log(`Erro ao conectar ao banco de dados: ${erro}`);
   });
 
-// Testando Pull Request on GitHub Versão 2 ---
+// Testando Pull Request on GitHub Versão 3 ---
