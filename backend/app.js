@@ -3,9 +3,13 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./database");
-const message_routes = require('./routes/message_routes');
-const user_routes = require('./routes/user_routes');
-const chat_routes = require('./routes/chat_routes');
+
+//Routes
+const message_routes = require("./routes/message_routes");
+const user_routes = require("./routes/user_routes");
+const chat_routes = require("./routes/chat_routes");
+const photo_routes = require("./routes/photo_Routes");
+
 // const http = require('http');
 // const socketIo = require('socket.io');
 
@@ -46,6 +50,7 @@ app.use(cors());
 app.use(message_routes);
 app.use(user_routes);
 app.use(chat_routes);
+app.use(photo_routes);
 
 app.get("/user", (req, res) => {
   res.send({ user: "user" });
@@ -61,7 +66,7 @@ app.post("/image", (req, res) => {
 
 db.connectToDatabase()
   .then(() => {
-    console.log("MongoDb contectado...")
+    console.log("Connecting MongoDb...");
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
     });
