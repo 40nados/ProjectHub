@@ -69,7 +69,13 @@ const DeletePhoto = async (req, res) => {
 };
 
 //GetAllPhotos
-const GetAllPhotos = async (req, res) => {};
+const GetAllPhotos = async (req, res) => {
+  const photos = await Photo.find({})
+    .sort([["createdAt", -1]])
+    .exec();
+
+  return res.status(200).json(photos); //Exibindo todas as fotos
+};
 
 //GetPhotoById
 const PhotoById = async (req, res) => {
