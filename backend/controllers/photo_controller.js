@@ -3,7 +3,6 @@
 
 //GetAllPhotos
 //GetphotobyId
-//GetuserPhotos
 
 //Imports
 const Photo = require("../models/photo");
@@ -78,7 +77,7 @@ const GetAllPhotos = async (req, res) => {
 };
 
 //GetPhotoById
-const PhotoById = async (req, res) => {
+const GetPhotoById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -100,5 +99,5 @@ module.exports = {
   InsertPhoto,
   DeletePhoto,
   GetAllPhotos,
-  PhotoById,
+  GetPhotoById,
 }; //Exportando las funciones

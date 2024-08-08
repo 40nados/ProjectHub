@@ -66,7 +66,7 @@ app.post("/image", (req, res) => {
 
 db.connectToDatabase()
   .then(() => {
-    console.log("MongoDb contectado...");
+    console.log("Connecting MongoDb...");
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
     });
