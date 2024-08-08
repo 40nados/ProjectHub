@@ -3,6 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./database");
+const message_routes = require('./routes/message_routes');
+const user_routes = require('./routes/user_routes');
+const chat_routes = require('./routes/chat_routes');
 // const http = require('http');
 // const socketIo = require('socket.io');
 
@@ -21,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //Socket
-// io.on('connection', (socket) => {
+/* io.on('connection', (socket) => {
 //   console.log('Novo cliente conectado:', socket.id);
 
 //   socket.on('joinRoom', (room) => {
@@ -37,9 +40,13 @@ app.use(cors());
 //   socket.on('disconnect', () => {
 //     console.log('Cliente desconectado:', socket.id);
 //   });
-// });
+// }); */
 
 //ROUTES
+app.use(message_routes);
+app.use(user_routes);
+app.use(chat_routes);
+
 app.get("/user", (req, res) => {
   res.send({ user: "user" });
 });
@@ -54,6 +61,7 @@ app.post("/image", (req, res) => {
 
 db.connectToDatabase()
   .then(() => {
+    console.log("MongoDb contectado...")
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
     });

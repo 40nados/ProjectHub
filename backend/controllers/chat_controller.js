@@ -1,5 +1,9 @@
 const Chat = require("../models/message");
 
+async function listAllChats(){
+    return await Chat.find()
+}
+
 async function getMessage(id) {
     return await Chat.findById(id)
 }
@@ -27,4 +31,4 @@ async function deleteChat(id) {
     }
 }
 
-module.exports = { getMessage, createChat, editChat, deleteChat }
+module.exports = { listAllChats, getMessage, createChat, editChat, deleteChat }

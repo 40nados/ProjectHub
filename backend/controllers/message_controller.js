@@ -1,7 +1,11 @@
 const Message = require("../models/message");
 
+async function listAllMessages() {
+    return await Message.find();
+}
+
 async function getMessage(id) {
-    return await Message.findById(id)
+    return await Message.findById(id);
 }
 
 async function createMessage({ chat, sender, type, content, timestamp }) {
@@ -27,4 +31,4 @@ async function deleteMessage(id) {
     }
 }
 
-module.exports = { getMessage, createMessage, editMessage, deleteMessage }
+module.exports = { listAllMessages, getMessage, createMessage, editMessage, deleteMessage }
