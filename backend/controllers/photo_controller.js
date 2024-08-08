@@ -37,7 +37,30 @@ const InsertPhoto = async (req, res) => {
 
 //DeletePhoto
 const DeletePhoto = async (req, res) => {
-  //To-do
+  const { id } = req.params;
+
+  const reqUser = req.user;
+
+  try {
+    const photo = await Photo.findById(id);
+
+    if (!photo) {
+      res.status(404).json({ errors: "Photo not found" });
+      return;
+    }
+    if (!photo.userId.equals(reqUser._id)) {
+      res.status(403).json({ errors: "You can't delete this photo" });
+    }
+
+    await Photo.findByIdAndDelete(photo._id);
+
+    res
+      .status(200)
+      .json({ id: photo.id, message: "Foto apagada com sucesso!" });
+  } catch (error) {
+    res.status(500).json({ errors: "Erro interno no servidor" });
+    return;
+  }
 };
 
-module.exports = InsertPhoto;
+module.exports = { InsertPhoto, DeletePhoto }; //Exportando las funciones
