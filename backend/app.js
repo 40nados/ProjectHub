@@ -54,16 +54,8 @@ app.use(chat_routes);
 app.use(photo_routes);
 app.use(audio_routes);
 
-app.get("/user", (req, res) => {
-  res.send({ user: "user" });
-});
-
-app.get("/messenger/:id", (req, res) => {
-  res.send({ page: "messenger", id: req.params.id });
-});
-
-app.post("/image", (req, res) => {
-  res.send({ todo: "S3" });
+app.get("/", (req, res) => {
+  res.send({ message: 'Hello World!'});
 });
 
 db.connectToDatabase()

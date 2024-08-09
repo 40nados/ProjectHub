@@ -2,33 +2,78 @@ const User = require("../models/user");
 
 async function listAllUsers() {
     return await User.find();
-} 
+}
 
-async function getuser(id) {
-    return await User.findById(id)
+async function getUserById(id) {
+    try{
+        return await User.findById(id);
+    }
+    catch(err){
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
+    }
 }
 
 async function createUser({ username, password, email, user_photo, language, description }) {
     let newUser = new User({ username, password, email, user_photo, language, description });
     try {
         await newUser.save();
-        return { "message": newUser };
+        return newUser ;
     } catch (err) {
-        return { "message": err };
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
     }
 }
 
-async function editUser({ username, password, email, user_photo, language, description }) {
+async function putUser(id, { username, password, email, user_photo, language, description }) {
+    try {
+        // Garantir que todos os campos necessários sejam fornecidos
+        if (!username || !password || !email || !user_photo || !language || !description) {
+            throw new Error('Todos os campos são necessários para uma atualização completa.');
+        }
 
+        const updatedUser = {
+            username,
+            password,
+            email,
+            user_photo,
+            language,
+            description
+        };
+
+        var currentUser = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+        return currentUser? currentUser: {"error": "User not found", "status": 404};
+    } catch (err) {
+        console.log('erro', err);
+        return { error: "Server Internal Error", status: 404 };
+    }
+}
+
+async function patchUser(id, { username = null, password = null, email = null, user_photo = null, language = null, description = null }) {
+    try {
+        const updateFields = {};
+        if (username !== null) updateFields.username = username;
+        if (password !== null) updateFields.password = password;
+        if (email !== null) updateFields.email = email;
+        if (user_photo !== null) updateFields.user_photo = user_photo;
+        if (language !== null) updateFields.language = language;
+        if (description !== null) updateFields.description = description;
+
+        var currentUser = await User.findByIdAndUpdate(id, updateFields, { new: true });
+        return currentUser? currentUser: {error: "User not found", status: 404};
+    } catch (err) {
+        console.log('erro', err);
+        return { error: "Server Internal Error", status: 404 };
+    }
 }
 
 async function deleteUser(id) {
     try {
-        await User.findByIdAndRemove(id)
-        return { "message": "Person deleted" };
+        return await User.findByIdAndDelete(id);
     } catch (err) {
-        return { "message": err };
+        console.log('erro', err);
+        return { error: "Server Internal Error", status: 500 };
     }
 }
 
-module.exports = { listAllUsers, getuser, createUser, editUser, deleteUser }
+module.exports = { listAllUsers, getUserById, createUser, putUser, patchUser, deleteUser }
