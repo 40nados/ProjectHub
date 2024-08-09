@@ -9,6 +9,7 @@ const message_routes = require("./routes/message_routes");
 const user_routes = require("./routes/user_routes");
 const chat_routes = require("./routes/chat_routes");
 const photo_routes = require("./routes/photo_Routes");
+const audio_routes = require("./routes/audio_routes");
 
 // const http = require('http');
 // const socketIo = require('socket.io');
@@ -51,6 +52,7 @@ app.use(message_routes);
 app.use(user_routes);
 app.use(chat_routes);
 app.use(photo_routes);
+app.use(audio_routes);
 
 app.get("/user", (req, res) => {
   res.send({ user: "user" });

@@ -17,7 +17,7 @@ const s3Client = new S3Client({
 });
 
 //Setando multerS3, bucketName e criação de pasta no bucket
-const imageStorage = multerS3({
+const audioStorage = multerS3({
   s3: s3Client,
   bucket: "projecthubs3",
   contentType: multerS3.AUTO_CONTENT_TYPE,
@@ -26,26 +26,30 @@ const imageStorage = multerS3({
     let folder = "";
 
     if (req.baseUrl.includes("user")) {
-      folder = "user_images";
-    } else if (req.baseUrl.includes("image")) {
-      folder = "images";
+      folder = "user_audios";
+    } else if (req.baseUrl.includes("audio")) {
+      folder = "audios";
     }
 
     const filename = Date.now() + path.extname(file.originalname);
-    const key = `uploads/${folder}/${filename}`; // Cria a pasta uploads no bucket --> uploads/user e uploads/image quando setado no BaseUrl
+    const key = `uploads/${folder}/${filename}`; // Cria a pasta audios no bucket --> uploads/user_audios e uploads/audios quando setado no BaseUrl
     cb(null, key);
   },
 });
 
-const imageUpload = multer({
-  storage: imageStorage,
+const audioUpload = multer({
+  storage: audioStorage,
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(png|jpg|jpeg)$/i)) {
-      // Upload apenas formatos png, jpg e jpeg
-      return cb(new Error("Please, send only Png, Jpg and Jpeg formats."));
+    if (
+      !file.originalname.match(
+        /\.(mp3|mp4|wav|webm|aac|flac|ogg|m4a|wma|aiff|alac|3gp|mov)$/i
+      )
+    ) {
+      // Upload apenas formatos permitidos
+      return cb(new Error("Please, send a valid format."));
     }
     cb(undefined, true);
   },
 });
 
-module.exports = { imageUpload };
+module.exports = { audioUpload };
