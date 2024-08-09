@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const audioSchema = new mongoose.Schema({
   title: { type: String },
   url: { type: String, required: true }, //Será pego no S3
-  timestamps: true,
+  timestamp: { type: Date, required: true },
 });
 
 let Audio = mongoose.model("Audio", audioSchema);

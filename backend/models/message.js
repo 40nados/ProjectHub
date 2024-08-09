@@ -7,7 +7,7 @@ const message = new mongoose.Schema({
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   type: { type: String, enum: ["text", "image", "audio"], required: true },
   content: { type: String, required: true },
-  timestamp: true,
+  timestamp: { type: Date, required: true },
 });
 
 let Message = mongoose.model("Message", message);
