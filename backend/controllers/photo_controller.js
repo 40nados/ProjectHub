@@ -15,13 +15,14 @@ const InsertPhoto = async (req, res) => {
 
   const imageUrl = req.file.location; //Location no S3
 
-  const reqUser = req.user;
+  const reqUser = req.params.userid;
 
-  const user = await User.findById(reqUser._id);
+  const user = await User.findById(reqUser);
+  console.log(user);
 
   const newPhoto = await Photo.create({
     title,
-    userId: user._id,
+    userId: user.id,
     userName: user.username,
     url: imageUrl,
   });
