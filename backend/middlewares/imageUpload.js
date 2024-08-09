@@ -27,8 +27,8 @@ const imageStorage = multerS3({
 
     if (req.baseUrl.includes("user")) {
       folder = "user_images";
-    } else if (req.baseUrl.includes("image")) {
-      folder = "images";
+    } else if (req.baseUrl.includes("photo")) {
+      folder = "photo";
     }
 
     const filename = Date.now() + path.extname(file.originalname);
