@@ -42,7 +42,7 @@ const imageUpload = multer({
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(png|jpg|jpeg)$/i)) {
       // Upload apenas formatos png, jpg e jpeg
-      return cb(new Error("Por favor, envie apenas png, jpg, ou jpeg."));
+      return cb(new Error("Please, send only Png, Jpg and Jpeg formats."));
     }
     cb(undefined, true);
   },

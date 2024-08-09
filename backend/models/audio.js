@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const photoSchema = new mongoose.Schema({
+const audioSchema = new mongoose.Schema({
   title: { type: String },
   url: { type: String, required: true }, //Será pego no S3
   timestamps: true,
 });
 
-let Photo = mongoose.model("Photo", photoSchema);
-module.exports = Photo;
+let Audio = mongoose.model("Audio", audioSchema);
+module.exports = Audio;
