@@ -18,7 +18,6 @@ const InsertPhoto = async (req, res) => {
   const reqUser = req.params.userid;
 
   const user = await User.findById(reqUser);
-  console.log(user);
 
   const newPhoto = await Photo.create({
     title,
