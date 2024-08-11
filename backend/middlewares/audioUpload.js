@@ -23,13 +23,11 @@ const audioStorage = multerS3({
   contentType: multerS3.AUTO_CONTENT_TYPE,
   acl: "public-read",
   key: function (req, file, cb) {
-    let folder = "";
+    let folder = "audios";
 
-    if (req.baseUrl.includes("user")) {
+    if (req.url.includes("user")) {
       folder = "user_audios";
-    } else if (req.baseUrl.includes("audio")) {
-      folder = "audios";
-    } else {
+    } else if (req.url.includes("audio")) {
       folder = "audios";
     }
 
