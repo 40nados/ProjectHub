@@ -29,6 +29,8 @@ const audioStorage = multerS3({
       folder = "user_audios";
     } else if (req.baseUrl.includes("audio")) {
       folder = "audios";
+    } else {
+      folder = "audios";
     }
 
     const filename = Date.now() + path.extname(file.originalname);
@@ -42,7 +44,7 @@ const audioUpload = multer({
   fileFilter(req, file, cb) {
     if (
       !file.originalname.match(
-        /\.(mp3|mp4|wav|webm|aac|flac|ogg|m4a|wma|aiff|alac|3gp|mov)$/i
+        /\.(mp3|mp4|wav|webm|aac|flac|ogg|m4a|wma|aiff|alac|3gp|mov|opus)$/i
       )
     ) {
       // Upload apenas formatos permitidos

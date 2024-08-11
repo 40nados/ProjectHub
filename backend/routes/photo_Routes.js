@@ -13,8 +13,8 @@ const {
 const { imageUpload } = require("../middlewares/imageUpload");
 
 routes.post("/photo/:userid", imageUpload.single("imageUrl"), InsertPhoto);
-routes.delete("/photo", DeletePhoto);
+routes.delete("/photo/:id", DeletePhoto);
 routes.get("/photo", GetAllPhotos);
-routes.get("/photo", GetPhotoById);
+routes.get("/photo/:id", GetPhotoById);
 
 module.exports = routes;

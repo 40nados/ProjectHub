@@ -12,9 +12,9 @@ const {
 //Importando Middlewares
 const { audioUpload } = require("../middlewares/audioUpload");
 
-routes.post("/", audioUpload.single("audioUrl"), InsertAudio);
-routes.delete("/:id", DeleteAudio);
-routes.get("/:id", GetAllAudios);
-routes.get("/:id", GetAudioById);
+routes.post("/audio/:userid", audioUpload.single("audioUrl"), InsertAudio);
+routes.delete("/audio/:id", DeleteAudio);
+routes.get("/audio", GetAllAudios);
+routes.get("/audio/:id", GetAudioById);
 
 module.exports = routes;
