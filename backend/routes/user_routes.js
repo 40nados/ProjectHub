@@ -1,11 +1,6 @@
 const express = require("express");
 const routes = express.Router();
-const bodyParser = require("body-parser");
 const { user_controller } = require("../database");
-
-//BODY PARSER
-routes.use(bodyParser.urlencoded({ extended: false }));
-routes.use(bodyParser.json());
 
 //ROUTES
 routes.get("/user", async (req, res) => {
@@ -25,7 +20,7 @@ routes.get("/user/:id", async (req, res) => {
 
 routes.post("/user", async (req, res) => {
   const result = await user_controller.createUser(req.body);
-  if (result.error) res.status(result.status).json(user.error);
+  if (result.error) res.status(result.status).json(result.error);
   else res.send(result);
 });
 
