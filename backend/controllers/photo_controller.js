@@ -11,11 +11,10 @@ const mongoose = require("mongoose");
 
 //Insert Photo
 const InsertPhoto = async (req, res) => {
+  console.log(req)
   const { title } = req.body;
 
   const imageUrl = req.file.location; //Location no S3
-
-  const reqUser = req.user;
 
   const user = await User.findById(reqUser._id);
 

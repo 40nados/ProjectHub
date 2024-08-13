@@ -6,7 +6,9 @@ async function listAllUsers() {
 
 async function getUserById(id) {
     try{
-        return await User.findById(id);
+        //select com "-" exclui um atributo;
+        //sect sem "-" adiciona apenas os que forem colocados no select
+        return await User.findById(id).select('-password').populate('chats').exec();
     }
     catch(err){
         console.log('error', err);

@@ -4,9 +4,9 @@ const { v4: uuidv4 } = require("uuid");
 const message = new mongoose.Schema(
   {
     _id: { type: String, default: uuidv4 },
-    chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chat", required: true },
+    chat: { type: String, ref: "Chat", required: true },
     sender: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "User",
       required: true,
     },

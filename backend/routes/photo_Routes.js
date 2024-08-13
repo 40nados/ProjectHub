@@ -12,7 +12,7 @@ const {
 //Importando Middlewares
 const { imageUpload } = require("../middlewares/imageUpload");
 
-routes.post("/photo", imageUpload.single("imageUrl"), InsertPhoto);
+routes.post("/photo/:userId", imageUpload.single("imageUrl"), InsertPhoto);
 routes.delete("/photo", DeletePhoto);
 routes.get("/photo", GetAllPhotos);
 routes.get("/photo", GetPhotoById);
