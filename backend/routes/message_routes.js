@@ -9,11 +9,9 @@ routes.use(bodyParser.json());
 
 //ROUTES
 
-routes.post('/message', async (req, res) => {
-    const allMessages = await message_controller.listAllMessages();
-    res.send({list: allMessages});
+routes.post("/message", async (req, res) => {
+  const allMessages = await message_controller.listAllMessages();
+  res.send({ list: allMessages });
 });
-
-
 
 module.exports = routes;

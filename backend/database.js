@@ -1,5 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
+const chat_controller = require("./controllers/chat_controller");
+const message_controller = require("./controllers/message_controller");
+const user_controller = require("./controllers/user_controller");
 
 //Database
 async function connectToDatabase() {
@@ -10,4 +13,9 @@ async function connectToDatabase() {
 }
 
 //EXPORTS
-module.exports = { connectToDatabase };
+module.exports = {
+  connectToDatabase,
+  chat_controller,
+  message_controller,
+  user_controller,
+};
