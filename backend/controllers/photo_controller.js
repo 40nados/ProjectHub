@@ -16,11 +16,13 @@ const InsertPhoto = async (req, res) => {
 
   const imageUrl = req.file.location; //Location no S3
 
-  const user = await User.findById(reqUser._id);
+  const reqUser = req.params.userid;
+
+  const user = await User.findById(reqUser);
 
   const newPhoto = await Photo.create({
     title,
-    userId: user._id,
+    userId: user.id,
     userName: user.username,
     url: imageUrl,
   });
@@ -38,8 +40,9 @@ const InsertPhoto = async (req, res) => {
 const DeletePhoto = async (req, res) => {
   const { id } = req.params;
 
-  const reqUser = req.user;
+  //const reqPhotoId = req.params.id;
 
+  const reqUser = req.body.userId;
   try {
     const photo = await Photo.findById(id);
 
@@ -50,8 +53,9 @@ const DeletePhoto = async (req, res) => {
     }
 
     //Photo belongs to user - Foto pertence ao usuário
-    if (!photo.userId.equals(reqUser._id)) {
-      res.status(403).json({ errors: "You can't delete this photo" });
+    if (photo.userId != reqUser) {
+      res.status(422).json({ errors: "You can't delete this photo" });
+      return;
     }
 
     //Deleting photo by DB - Deletando foto do banco
@@ -59,8 +63,9 @@ const DeletePhoto = async (req, res) => {
 
     res
       .status(200)
-      .json({ id: photo.id, message: "Photo deleted succesfully!" }); // Success Message - Mensagem de Sucesso
+      .json({ id: photo._id, message: "Photo deleted succesfully!" }); // Success Message - Mensagem de Sucesso
   } catch (error) {
+    console.log(error);
     res.status(500).json({ errors: "Intern Server Error" });
     return;
   }
@@ -80,7 +85,7 @@ const GetPhotoById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const photo = Photo.findById(id);
+    const photo = await Photo.findById(id);
 
     if (!photo) {
       res.status(404).json({ errors: "Photo not found" }); // Foto não encontrada

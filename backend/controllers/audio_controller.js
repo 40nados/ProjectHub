@@ -9,13 +9,13 @@ const InsertAudio = async (req, res) => {
 
   const audioUrl = req.file.location; //Location no S3
 
-  const reqUser = req.user;
+  const reqUser = req.params.userid;
 
-  const user = await User.findById(reqUser._id);
+  const user = await User.findById(reqUser);
 
   const newAudio = await Audio.create({
     title,
-    userId: user._id,
+    userId: user.id,
     userName: user.username,
     url: audioUrl,
   });
@@ -33,7 +33,7 @@ const InsertAudio = async (req, res) => {
 const DeleteAudio = async (req, res) => {
   const { id } = req.params;
 
-  const reqUser = req.user;
+  const reqUser = req.body.userId;
 
   try {
     const audio = await Audio.findById(id);
@@ -45,7 +45,7 @@ const DeleteAudio = async (req, res) => {
     }
 
     //Audio belongs to user - Audio pertence ao usuário
-    if (!audio.userId.equals(reqUser._id)) {
+    if (audio.userId != reqUser) {
       res.status(403).json({ errors: "You can't delete this audio" });
     }
 
@@ -54,7 +54,7 @@ const DeleteAudio = async (req, res) => {
 
     res
       .status(200)
-      .json({ id: audio.id, message: "Audio deleted succesfully!" }); // Success Message - Mensagem de Sucesso
+      .json({ id: audio._id, message: "Audio deleted succesfully!" }); // Success Message - Mensagem de Sucesso
   } catch (error) {
     res.status(500).json({ errors: "Intern Server Error" });
     return;
@@ -75,7 +75,7 @@ const GetAudioById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const audio = Audio.findById(id);
+    const audio = await Audio.findById(id);
 
     if (!audio) {
       res.status(404).json({ errors: "Audio not found" }); // Audio não encontrada
