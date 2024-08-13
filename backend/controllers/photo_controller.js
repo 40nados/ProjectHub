@@ -9,19 +9,8 @@ require("dotenv").config();
 const Photo = require("../models/photo");
 const User = require("../models/user");
 const mongoose = require("mongoose");
-const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-
-// Configuração da AWS
-const s3Client = new S3Client({
-  region: process.env.S3_REGION,
-  credentials: {
-    accessKeyId: process.env.S3_KEY,
-    secretAccessKey: process.env.S3_SECRET_KEY,
-  },
-  sslEnabled: false,
-  s3ForcePathStyle: true,
-  signatureVersion: "v4",
-});
+const { s3Client } = require("../awsS3Client");
+const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Photo
 const InsertPhoto = async (req, res) => {
@@ -72,6 +61,7 @@ const DeletePhoto = async (req, res) => {
     }
 
     const key = photo.url.split(".com/")[1];
+    console.log(key);
 
     const url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`; //Pegando url da imagem para deletar no bucket, e garantindo que ela esta no formato correto
 

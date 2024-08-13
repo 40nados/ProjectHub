@@ -3,19 +3,8 @@ require("dotenv").config();
 const Audio = require("../models/audio");
 const User = require("../models/user");
 const mongoose = require("mongoose");
-const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-
-// Configuração da AWS
-const s3Client = new S3Client({
-  region: process.env.S3_REGION,
-  credentials: {
-    accessKeyId: process.env.S3_KEY,
-    secretAccessKey: process.env.S3_SECRET_KEY,
-  },
-  sslEnabled: false,
-  s3ForcePathStyle: true,
-  signatureVersion: "v4",
-});
+const { s3Client } = require("../awsS3Client");
+const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Audio
 const InsertAudio = async (req, res) => {

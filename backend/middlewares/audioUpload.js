@@ -1,20 +1,8 @@
 require("dotenv").config();
 const multer = require("multer");
 const path = require("path");
-const { S3Client } = require("@aws-sdk/client-s3");
+const { s3Client } = require("../awsS3Client"); //Importando Configuração de login AWS
 const multerS3 = require("multer-s3");
-
-// Configuração da AWS
-const s3Client = new S3Client({
-  region: process.env.S3_REGION,
-  credentials: {
-    accessKeyId: process.env.S3_KEY,
-    secretAccessKey: process.env.S3_SECRET_KEY,
-  },
-  sslEnabled: false,
-  s3ForcePathStyle: true,
-  signatureVersion: "v4",
-});
 
 //Setando multerS3, bucketName e criação de pasta no bucket
 const audioStorage = multerS3({
