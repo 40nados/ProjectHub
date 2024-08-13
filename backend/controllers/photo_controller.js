@@ -8,6 +8,7 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Photo
 const InsertPhoto = async (req, res) => {
+  console.log(req)
   const { title } = req.body;
 
   const imageUrl = req.file.location; //Location no S3

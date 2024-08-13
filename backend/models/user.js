@@ -9,7 +9,7 @@ const user = new mongoose.Schema({
     user_photo: { type: String },
     language: { type: String, default: 'pt' },
     description: { type: String },
-    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }]
+    chats: [{ type: String, ref: 'Chat' }]
 });
 
 let User = mongoose.model("User", user);
