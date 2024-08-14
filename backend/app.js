@@ -10,6 +10,7 @@ const user_routes = require("./routes/user_routes");
 const chat_routes = require("./routes/chat_routes");
 const photo_routes = require("./routes/photo_Routes");
 const audio_routes = require("./routes/audio_routes");
+const publication_routes = require("./routes/publication_routes");
 
 // const http = require('http');
 // const socketIo = require('socket.io');
@@ -53,9 +54,10 @@ app.use(user_routes);
 app.use(chat_routes);
 app.use(photo_routes);
 app.use(audio_routes);
+app.use(publication_routes);
 
 app.get("/", (req, res) => {
-  res.send({ message: 'Hello World!'});
+  res.send({ message: "Hello World!" });
 });
 
 db.connectToDatabase()
