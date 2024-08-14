@@ -3,11 +3,11 @@ require("dotenv").config();
 const Publication = require("../models/publication");
 const User = require("../models/user");
 const mongoose = require("mongoose");
-/*const { s3Client } = require("../awsS3Client"); //Importando Configuração de login AWS
-const { DeleteObjectCommand } = require("@aws-sdk/client-s3");*/
+const { s3Client } = require("../awsS3Client"); //Importando Configuração de login AWS
+const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Photo
-const insertPublication = async (req, res) => {
+const InsertPublication = async (req, res) => {
   const { title } = req.body;
 
   const imageUrl = req.file.location; //Location no S3
@@ -32,7 +32,6 @@ const insertPublication = async (req, res) => {
   res.status(201).json(newPublication);
 };
 
-/*
 //DeletePublication
 const DeletePublication = async (req, res) => {
   const { id } = req.params;
@@ -43,15 +42,15 @@ const DeletePublication = async (req, res) => {
   try {
     const publication = await Publication.findById(id);
 
-    //Photo dosn't exist - Foto Não existe
+    //Publication dosn't exist - Foto Não existe
     if (!publication) {
       res.status(404).json({ errors: "Publication not found" });
       return;
     }
 
-    //Photo belongs to user - Foto pertence ao usuário
+    //Publication belongs to user - Publicação pertence ao usuário
     if (publication.userId != reqUser) {
-      res.status(422).json({ errors: "You can't delete this photo" });
+      res.status(422).json({ errors: "You can't delete this publication" });
       return;
     }
 
@@ -69,23 +68,23 @@ const DeletePublication = async (req, res) => {
       //console.log(`Deletado do s3, link: ${url}`);
     } catch (error) {
       //console.log(`Erro ao deletar do s3, link: ${url}`);
-      //console.log(error);
+      console.log(error);
       return res.status(500).json({ errors: "Error deleting file from S3." });
     }
 
-    //Deleting photo by DB - Deletando foto do banco
-    await Photo.findByIdAndDelete(photo._id);
+    //Deleting publication by DB - Deletando foto do banco
+    await Publication.findByIdAndDelete(publication._id);
 
-    res
-      .status(200)
-      .json({ id: photo._id, message: "Photo deleted succesfully!" }); // Success Message - Mensagem de Sucesso
+    res.status(200).json({
+      id: publication._id,
+      message: "Publication deleted succesfully!",
+    }); // Success Message - Mensagem de Sucesso
   } catch (error) {
     console.log(error);
     res.status(500).json({ errors: "Intern Server Error" });
     return;
   }
 };
-*/
 
 //GetAllPublications
 const GetAllPublications = async (req, res) => {
@@ -93,31 +92,37 @@ const GetAllPublications = async (req, res) => {
     .sort([["createdAt", -1]])
     .exec();
 
-  return res.status(200).json(publications); //All  Photos - Exibindo todas as fotos
+  return res.status(200).json(publications); //All  Publications - Exibindo todas as publicações
 };
 
-/*
-//GetPhotoById
-const GetPhotoById = async (req, res) => {
+//GetPublicationById
+const GetPublicationById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const photo = await Photo.findById(id);
+    const publication = await Publication.findById(id);
 
-    if (!photo) {
-      res.status(404).json({ errors: "Photo not found" }); // Photo Not Found - Foto não encontrada
+    if (!publication) {
+      res.status(404).json({ errors: "Publication not found" }); // Publication Not Found - Publicação não encontrada
       return;
     }
 
-    res.status(200).json(photo);
+    res.status(200).json(publication);
   } catch (error) {
     res.status(500).json({ errors: "Intern Server Error" }); // Something Error - Algum erro aí
     return;
   }
 };
-*/
+
+//Likes
+
+//Comments
+
+//Search
 
 module.exports = {
-  insertPublication,
+  InsertPublication,
   GetAllPublications,
+  GetPublicationById,
+  DeletePublication,
 }; //Exportando las funciones

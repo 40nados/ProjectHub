@@ -3,8 +3,10 @@ const routes = express.Router();
 
 //Controllers
 const {
-  insertPublication,
+  InsertPublication,
   GetAllPublications,
+  GetPublicationById,
+  DeletePublication,
 } = require("../controllers/publication_controller");
 
 //Middlewares
@@ -13,10 +15,11 @@ const { imageUpload } = require("../middlewares/imageUpload");
 routes.post(
   "/publication/:userid",
   imageUpload.single("imageUrl"),
-  insertPublication
+  InsertPublication
 );
-routes.delete("/publication/:id");
+routes.delete("/publication/:id", DeletePublication);
 routes.get("/publication", GetAllPublications);
-routes.get("/publication/:id");
+routes.get("/search");
+routes.get("/publication/:id", GetPublicationById);
 
 module.exports = routes;
