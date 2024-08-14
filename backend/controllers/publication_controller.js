@@ -151,6 +151,15 @@ const UpdatePublication = async (req, res) => {
 //Comments
 
 //Search
+const SearchPublications = async (req, res) => {
+  const { q } = req.query;
+
+  const publications = await Publication.find({
+    title: new RegExp(q, "i"),
+  }).exec();
+
+  res.status(200).json(publications);
+};
 
 module.exports = {
   InsertPublication,
@@ -158,4 +167,5 @@ module.exports = {
   GetPublicationById,
   DeletePublication,
   UpdatePublication,
+  SearchPublications,
 }; //Exportando las funciones
