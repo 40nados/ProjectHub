@@ -114,6 +114,38 @@ const GetPublicationById = async (req, res) => {
   }
 };
 
+//UpdatePublication
+const UpdatePublication = async (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const reqUser = req.body.userId;
+
+  const publication = await Publication.findById(id);
+
+  //Check if publication exists -- Chencado se publicação existe
+  if (!publication) {
+    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found
+    return;
+  }
+
+  //Publication belongs to user - Publicação pertence ao usuário
+  if (publication.userId != reqUser) {
+    res.status(422).json({ errors: "You can't edit this publication" });
+    return;
+  }
+
+  if (title) {
+    publication.title = title;
+  }
+
+  await publication.save();
+
+  res
+    .status(200)
+    .json({ publication, message: "Publicação editada com sucesso!" });
+};
+
 //Likes
 
 //Comments
@@ -125,4 +157,5 @@ module.exports = {
   GetAllPublications,
   GetPublicationById,
   DeletePublication,
+  UpdatePublication,
 }; //Exportando las funciones

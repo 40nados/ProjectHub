@@ -7,6 +7,7 @@ const {
   GetAllPublications,
   GetPublicationById,
   DeletePublication,
+  UpdatePublication,
 } = require("../controllers/publication_controller");
 
 //Middlewares
@@ -20,6 +21,7 @@ routes.post(
 routes.delete("/publication/:id", DeletePublication);
 routes.get("/publication", GetAllPublications);
 routes.get("/search");
+routes.patch("/publication/:id", UpdatePublication);
 routes.get("/publication/:id", GetPublicationById);
 
 module.exports = routes;
