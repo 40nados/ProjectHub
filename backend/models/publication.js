@@ -8,7 +8,8 @@ const publicationSchema = new mongoose.Schema(
     description: { type: String },
     comments: { type: Array },
     likes: { type: Array },
-    technologies: { type: Array },
+    technologies: { type: [String] },
+    project_link: { type: String, default: "" },
     url: { type: String, required: true }, //Será pego no S3
   },
   { timestamp: true }
