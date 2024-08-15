@@ -10,6 +10,7 @@ const {
   UpdatePublication,
   SearchPublications,
   Likes,
+  Comment,
 } = require("../controllers/publication_controller");
 
 //Middlewares
@@ -24,6 +25,7 @@ routes.delete("/publication/:id", DeletePublication);
 routes.get("/publication", GetAllPublications);
 routes.get("/search", SearchPublications);
 routes.put("/like/:id", Likes);
+routes.put("/comment/:id", Comment);
 routes.patch("/publication/:id", UpdatePublication);
 routes.get("/publication/:id", GetPublicationById);
 

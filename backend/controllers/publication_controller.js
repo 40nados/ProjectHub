@@ -9,6 +9,7 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 //Insert Photo
 const InsertPublication = async (req, res) => {
   const { title } = req.body;
+  const { description } = req.body;
 
   const imageUrl = req.file.location; //Location no S3
 
@@ -18,6 +19,7 @@ const InsertPublication = async (req, res) => {
 
   const newPublication = await Publication.create({
     title,
+    description,
     userId: user.id,
     userName: user.username,
     url: imageUrl,
@@ -175,17 +177,48 @@ const Likes = async (req, res) => {
 
     publication.save();
 
-    res
-      .status(200)
-      .json({
-        publication: id,
-        userId: reqUser,
-        message: "Publication Liked!",
-      });
+    res.status(200).json({
+      publication: id,
+      userId: reqUser,
+      message: "Publication Liked!",
+    });
   }
 };
 
 //Comments
+const Comment = async (req, res) => {
+  const { id } = req.params;
+
+  const { comment } = req.body;
+
+  const reqUser = req.body.userId;
+
+  const user = await User.findById(reqUser);
+
+  const publication = await Publication.findById(id);
+
+  //Check if publication exists -- Chencado se publicação existe
+  if (!publication) {
+    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found
+    return;
+  }
+
+  const userComment = {
+    comment,
+    userName: user.username,
+    userImage: user.user_photo,
+    userId: user.id,
+  };
+
+  publication.comments.push(userComment);
+
+  await publication.save();
+
+  res.status(200).json({
+    comment: userComment,
+    message: "The comment has been added succesfully!",
+  });
+};
 
 //Search
 const SearchPublications = async (req, res) => {
@@ -206,4 +239,5 @@ module.exports = {
   UpdatePublication,
   SearchPublications,
   Likes,
+  Comment,
 }; //Exportando las funciones
