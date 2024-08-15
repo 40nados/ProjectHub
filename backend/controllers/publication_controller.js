@@ -161,17 +161,28 @@ const Likes = async (req, res) => {
 
   //Check if user already liked the photo - Publicação Já curtida ou não
   if (publication.likes.includes(reqUser)) {
-    res.status(422).json({ errors: "You alredy liked this publication" }); // You alredy liked this publication -- Você já curtiu essa publicação
+    publication.likes = publication.likes.filter(
+      (user) => user.toString() !== reqUser.toString()
+    );
+
+    await publication.save();
+    res
+      .status(200)
+      .json({ publication: id, userId: reqUser, message: "Desliked" });
     return;
+  } else {
+    publication.likes.push(reqUser);
+
+    publication.save();
+
+    res
+      .status(200)
+      .json({
+        publication: id,
+        userId: reqUser,
+        message: "Publication Liked!",
+      });
   }
-
-  publication.likes.push(reqUser);
-
-  publication.save();
-
-  res
-    .status(200)
-    .json({ publication: id, userId: reqUser, message: "Publicação curtida!" });
 };
 
 //Comments
