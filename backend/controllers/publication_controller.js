@@ -125,7 +125,7 @@ const UpdatePublication = async (req, res) => {
 
   //Check if publication exists -- Chencado se publicação existe
   if (!publication) {
-    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found
+    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found -- Publicação não encontrada
     return;
   }
 
@@ -147,6 +147,32 @@ const UpdatePublication = async (req, res) => {
 };
 
 //Likes
+const Likes = async (req, res) => {
+  const { id } = req.params;
+  const reqUser = req.body.userId;
+
+  const publication = await Publication.findById(id);
+
+  //Check if publication exists -- Chencado se publicação existe
+  if (!publication) {
+    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found -- Publicação não encontrada
+    return;
+  }
+
+  //Check if user already liked the photo - Publicação Já curtida ou não
+  if (publication.likes.includes(reqUser)) {
+    res.status(422).json({ errors: "You alredy liked this publication" }); // You alredy liked this publication -- Você já curtiu essa publicação
+    return;
+  }
+
+  publication.likes.push(reqUser);
+
+  publication.save();
+
+  res
+    .status(200)
+    .json({ publication: id, userId: reqUser, message: "Publicação curtida!" });
+};
 
 //Comments
 
@@ -168,4 +194,5 @@ module.exports = {
   DeletePublication,
   UpdatePublication,
   SearchPublications,
+  Likes,
 }; //Exportando las funciones
