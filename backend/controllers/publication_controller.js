@@ -97,6 +97,17 @@ const GetAllPublications = async (req, res) => {
   return res.status(200).json(publications); //All  Publications - Exibindo todas as publicações
 };
 
+//GetUserPublications
+const GetUserPublications = async (req, res) => {
+  const { id } = req.params;
+
+  const publications = await Publication.find({ userId: id })
+    .sort([["createdAt", -1]])
+    .exec();
+
+  return res.status(200).json(publications);
+};
+
 //GetPublicationById
 const GetPublicationById = async (req, res) => {
   const { id } = req.params;
@@ -236,6 +247,7 @@ module.exports = {
   GetAllPublications,
   GetPublicationById,
   DeletePublication,
+  GetUserPublications,
   UpdatePublication,
   SearchPublications,
   Likes,
