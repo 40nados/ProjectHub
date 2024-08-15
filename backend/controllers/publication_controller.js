@@ -131,6 +131,7 @@ const GetPublicationById = async (req, res) => {
 const UpdatePublication = async (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
+  const { description } = req.body;
 
   const reqUser = req.body.userId;
 
@@ -150,6 +151,7 @@ const UpdatePublication = async (req, res) => {
 
   if (title) {
     publication.title = title;
+    publication.description = description;
   }
 
   await publication.save();
