@@ -97,6 +97,17 @@ const GetAllPublications = async (req, res) => {
   return res.status(200).json(publications); //All  Publications - Exibindo todas as publicações
 };
 
+//GetUserPublications
+const GetUserPublications = async (req, res) => {
+  const { id } = req.params;
+
+  const publications = await Publication.find({ userId: id })
+    .sort([["createdAt", -1]])
+    .exec();
+
+  return res.status(200).json(publications);
+};
+
 //GetPublicationById
 const GetPublicationById = async (req, res) => {
   const { id } = req.params;
@@ -120,6 +131,7 @@ const GetPublicationById = async (req, res) => {
 const UpdatePublication = async (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
+  const { description } = req.body;
 
   const reqUser = req.body.userId;
 
@@ -139,6 +151,7 @@ const UpdatePublication = async (req, res) => {
 
   if (title) {
     publication.title = title;
+    publication.description = description;
   }
 
   await publication.save();
@@ -236,6 +249,7 @@ module.exports = {
   GetAllPublications,
   GetPublicationById,
   DeletePublication,
+  GetUserPublications,
   UpdatePublication,
   SearchPublications,
   Likes,

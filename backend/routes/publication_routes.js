@@ -7,6 +7,7 @@ const {
   GetAllPublications,
   GetPublicationById,
   DeletePublication,
+  GetUserPublications,
   UpdatePublication,
   SearchPublications,
   Likes,
@@ -32,6 +33,7 @@ routes.post(
 );
 routes.delete("/publication/:id", DeletePublication);
 routes.get("/publication", GetAllPublications);
+routes.get("/publication/user/:id", GetUserPublications);
 routes.get("/search", SearchPublications);
 routes.put("/like/:id", Likes);
 routes.put("/comment/:id", commentValidation(), validate, Comment);
