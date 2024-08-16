@@ -8,10 +8,7 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Photo
 const InsertPublication = async (req, res) => {
-  const { title } = req.body;
-  const { description } = req.body;
-  const { project_link } = req.body;
-  const { technologies } = req.body;
+  const { title, description, project_link, technologies } = req.body;
 
   const imageUrl = req.file.location; //Location no S3
 
@@ -134,10 +131,7 @@ const GetPublicationById = async (req, res) => {
 //UpdatePublication
 const UpdatePublication = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
-  const { description } = req.body;
-  const { project_link } = req.body;
-  const { technologies } = req.body;
+  const { title, description, project_link, technologies } = req.body;
 
   const reqUser = req.body.userId;
 
@@ -162,7 +156,7 @@ const UpdatePublication = async (req, res) => {
     publication.technologies = technologies;
   }
 
-  // Verificando se há um novo arquivo de imagem enviado
+  // Verificando se há um novo arquivo de imagem enviado para ser atualizado como thumbnail do projeto
   if (req.file) {
     const oldImageKey = publication.url.split(".com/")[1]; // Key da imagem antiga
 
@@ -193,14 +187,7 @@ const UpdatePublication = async (req, res) => {
     return res.status(500).json({ errors: "Error updating the publication." });
   }
 };
-/*
-  await publication.save();
 
-  res
-    .status(200)
-    .json({ publication, message: "Publicação editada com sucesso!" });
-};
-*/
 //Likes
 const Likes = async (req, res) => {
   const { id } = req.params;
