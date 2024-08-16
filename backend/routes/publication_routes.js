@@ -31,6 +31,7 @@ routes.post(
   validate,
   InsertPublication
 );
+
 routes.delete("/publication/:id", DeletePublication);
 routes.get("/publication", GetAllPublications);
 routes.get("/publication/user/:id", GetUserPublications);
@@ -39,6 +40,7 @@ routes.put("/like/:id", Likes);
 routes.put("/comment/:id", commentValidation(), validate, Comment);
 routes.patch(
   "/publication/:id",
+  imageUpload.single("imageUrl"),
   publicationUpdateValidation(),
   validate,
   UpdatePublication

@@ -8,8 +8,7 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Photo
 const InsertPublication = async (req, res) => {
-  const { title } = req.body;
-  const { description } = req.body;
+  const { title, description, project_link, technologies } = req.body;
 
   const imageUrl = req.file.location; //Location no S3
 
@@ -20,6 +19,8 @@ const InsertPublication = async (req, res) => {
   const newPublication = await Publication.create({
     title,
     description,
+    technologies,
+    project_link,
     userId: user.id,
     userName: user.username,
     url: imageUrl,
@@ -130,8 +131,7 @@ const GetPublicationById = async (req, res) => {
 //UpdatePublication
 const UpdatePublication = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
-  const { description } = req.body;
+  const { title, description, project_link, technologies } = req.body;
 
   const reqUser = req.body.userId;
 
@@ -149,16 +149,43 @@ const UpdatePublication = async (req, res) => {
     return;
   }
 
-  if (title) {
+  if (title || description || project_link || technologies) {
     publication.title = title;
     publication.description = description;
+    publication.project_link = project_link;
+    publication.technologies = technologies;
   }
 
-  await publication.save();
+  // Verificando se há um novo arquivo de imagem enviado para ser atualizado como thumbnail do projeto
+  if (req.file) {
+    const oldImageKey = publication.url.split(".com/")[1]; // Key da imagem antiga
 
-  res
-    .status(200)
-    .json({ publication, message: "Publicação editada com sucesso!" });
+    // Excluindo a imagem antiga do S3
+    try {
+      const deleteParams = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: oldImageKey,
+      };
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ errors: "Error deleting old file from S3." });
+    }
+
+    // Atualizando a URL da publicação com a nova imagem
+    publication.url = req.file.location;
+  }
+
+  // Salvando a publicação atualizada
+  try {
+    await publication.save();
+    return res
+      .status(200)
+      .json({ publication, message: "Publication updated successfully!" });
+  } catch (error) {
+    return res.status(500).json({ errors: "Error updating the publication." });
+  }
 };
 
 //Likes
