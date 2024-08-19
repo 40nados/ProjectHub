@@ -147,14 +147,14 @@ async function deleteChat(id) {
             { session }
         );
 
-        console.log(updatedusers)
-
         // Comitar a transação
         await session.commitTransaction();
         return { users: updatedusers };
     } catch (err) {
         console.log(err)
         return { "message": err };
+    }finally{
+        session.endSession();
     }
 }
 
