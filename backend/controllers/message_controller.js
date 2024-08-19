@@ -1,34 +1,84 @@
 const Message = require("../models/message");
+const Chat = require("../models/chat");
+const mongoose = require('mongoose');
+const { DeletePhoto } = require("../controllers/photo_controller")
 
-async function listAllMessages() {
-    return await Message.find();
-}
-
-async function getMessage(id) {
-    return await Message.findById(id);
-}
-
-async function createMessage({ chat, sender, type, content, timestamp }) {
-    let newUser = new Message({ chat, sender, type, content, timestamp });
-    try {
-        await newUser.save();
-        return { "message": newUser };
-    } catch (err) {
-        return { "message": err };
+async function getMessages(chatId, limit, offset) {
+    try{
+        const result = await Message.find({chat: chatId}).skip(offset).limit(limit).exec();
+        return result;
+    }catch(error){
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
     }
 }
 
-async function editMessage({ chat, sender, type, content, timestamp }) {
+async function createMessage(chatId, body) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-}
-
-async function deleteMessage(id) {
     try {
-        await Message.findByIdAndRemove(id)
-        return { "message": "Person deleted" };
+        const { sender, type, content } = body;
+        let message = new Message({ sender, type, content, chat: chatId });
+        const savedMessage = await message.save({session});
+
+        const updatedChat = await Chat.updateMany(
+            { _id: { $in: chatId } },
+            { $push: { messages: savedMessage._id } },
+            { session }
+        );
+
+        await session.commitTransaction();
+        return { message: savedMessage, chat: updatedChat };
+
     } catch (err) {
-        return { "message": err };
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
+    }finally{
+        session.endSession();
     }
 }
 
-module.exports = { listAllMessages, getMessage, createMessage, editMessage, deleteMessage }
+async function editMessage(messageId, body) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try{
+        const { content } = body;
+        const result = await Message.updateOne(
+            { _id: messageId, type: 'text' },
+            { $set: { content: content } } 
+        );
+        return result;
+    }catch(error){
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
+    }finally{
+
+    }
+}
+
+async function deleteMessage(messageId) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const result = await Message.findById(messageId).select('chat').exec();
+        await Message.findByIdAndDelete(messageId);
+
+        const updatedChat = await Chat.updateMany(
+            { _id: result.chat },
+            { $pull: { messages: messageId } },
+            { session }
+        );
+
+        // Comitar a transação
+        await session.commitTransaction();
+        return { chat: updatedChat };
+    } catch (err) {
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
+    }
+}
+
+module.exports = { getMessages, createMessage, editMessage, deleteMessage }

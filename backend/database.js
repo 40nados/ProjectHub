@@ -16,13 +16,6 @@ async function connectToDatabase() {
 
 //EXPORTS
 module.exports = {
-<<<<<<< HEAD
-  connectToDatabase,
-  chat_controller,
-  message_controller,
-  user_controller,
-};
-=======
     connectToDatabase,
     chat_controller,
     message_controller,
@@ -30,4 +23,3 @@ module.exports = {
     photo_controller,
     audio_controller
 }
->>>>>>> b176276d804ab800c35999298c31f9cf0d6fd6a6
