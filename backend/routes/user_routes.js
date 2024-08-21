@@ -1,5 +1,14 @@
 const express = require("express");
 const routes = express.Router();
+
+//Middlewares
+const validate = require("../middlewares/handleValidation");
+const {
+  createUserValidation,
+  updateUserValidation,
+} = require("../middlewares/userValidation");
+
+//Controllers
 const { user_controller } = require("../database");
 
 //ROUTES
@@ -18,7 +27,7 @@ routes.get("/user/:id", async (req, res) => {
   } else res.status(404).json("User not found");
 });
 
-routes.post("/user", async (req, res) => {
+routes.post("/user", createUserValidation(), validate, async (req, res) => {
   const result = await user_controller.createUser(req.body);
   if (result.error) res.status(result.status).json(result.error);
   else res.send(result);
@@ -30,11 +39,16 @@ routes.put("/user/:id", async (req, res) => {
   else res.send(result);
 });
 
-routes.patch("/user/:id", async (req, res) => {
-  const result = await user_controller.patchUser(req.params.id, req.body);
-  if (result.error) res.status(result.status).json(result.error);
-  else res.send(result);
-});
+routes.patch(
+  "/user/:id",
+  updateUserValidation(),
+  validate,
+  async (req, res) => {
+    const result = await user_controller.patchUser(req.params.id, req.body);
+    if (result.error) res.status(result.status).json(result.error);
+    else res.send(result);
+  }
+);
 
 routes.delete("/user/:id", async (req, res) => {
   const result = await user_controller.deleteUser(req.params.id);

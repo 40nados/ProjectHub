@@ -3,8 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./database");
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const { loginUserValidation } = require("./middlewares/userValidation");
+const validate = require("./middlewares/handleValidation");
 
 //Routes
 const message_routes = require("./routes/message_routes");
@@ -65,28 +68,32 @@ app.get("/", authenticateJWT, (req, res) => {
   res.send({ message: "Hello World!", user: req.user, headers: req.headers });
 });
 
-app.post('/register', async (req, res) => {
+app.post("/register", async (req, res) => {
   const user = await db.user_controller.createUser(req.body);
   // Gera um token com o payload (por exemplo, o nome do usuário)
-  const accessToken = jwt.sign({user: user.username}, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const accessToken = jwt.sign(
+    { user: user.username },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
   res.json({ accessToken });
 });
 
-app.post('/login', async (req, res) => {
+app.post("/login", loginUserValidation(), validate, async (req, res) => {
   const username = req.body.username;
   const user = await db.user_controller.getPasswordByUsername(username);
 
   if (req.body.password != user.password) {
-    res.status(401).json({ message: "User or Password not right" })
-  }
-  else {
-
+    res.status(401).json({ message: "User or Password not right" });
+  } else {
     // Gera um token com o payload (por exemplo, o nome do usuário)
-    const accessToken = jwt.sign({user: username}, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const accessToken = jwt.sign({ user: username }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.json({ accessToken });
   }
-})
+});
 
 db.connectToDatabase()
   .then(() => {
