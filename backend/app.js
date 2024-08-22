@@ -72,7 +72,14 @@ app.get("/", authenticateJWT, (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     // Criando usuário e guardando na variável seus dados
-    const user = await db.user_controller.createUser(req.body);
+    const result = await db.user_controller.createUser(req.body);
+
+    if (result.error) {
+      // Se o resultado contém um erro (e-mail já registrado)
+      return res.status(result.status).json({ message: result.error });
+    }
+
+    const user = result;
 
     // Gerando token para o usuário criado
     const verificationToken = generateVerificationToken(user);

@@ -16,19 +16,34 @@ const sendVerificationEmail = async (userEmail, token) => {
     from: process.env.EMAIL_USER,
     to: userEmail,
     subject: "Verificação de E-mail",
-    html: `<h2>Verifique seu e-mail</h2>
-           <p>Clique no link abaixo para verificar sua conta:</p>
-           <a href="${process.env.SERVER_URL}/verify-email?token=${token}" 
-           style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;">
-           Verificar E-mail
-           </a>`,
+    html: `<html>
+  <script src="https://kit.fontawesome.com/c834624e2c.js" crossorigin="anonymous"></script>
+        <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+          <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #121212; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #fff; text-align: center;">Bem-vindo(a) ao ProjectHub!</h2>
+            <img src="https://cdn.discordapp.com/attachments/720147957760000036/1276029623947362347/image.png?ex=66c80ab1&is=66c6b931&hm=4b62e203f369d6957d9caf5cf741566fe437c600b28902f46b1f23108731668f&" alt = "envelope" style="max-width: 100%; height: auto; border-radius: 10px"></img>
+            <p style="font-size: 16px; color: #666666; text-align: center;">
+              Obrigado por se registrar conosco! Para concluir o processo de registro e ativar sua conta, por favor, clique no botão abaixo.
+            </p>
+            <div style="text-align: center; margin-top: 20px;">
+              <a href="${process.env.SERVER_URL}/verify-email?token=${token}" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; display: inline-block;">
+                Verificar E-mail <i class="fa-solid fa-envelope"></i>
+              </a>
+              
+            </div>
+            <p style="font-size: 14px; color: #999999; text-align: center; margin-top: 30px;">
+              <strong>Se você não se registrou conosco, por favor, ignore este e-mail.</strong>
+            </p>
+          </div>
+        </body>
+      </html>`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log("E-mail de verificação enviado com sucesso.");
+    //console.log("E-mail de verificação enviado com sucesso.");
   } catch (error) {
-    console.log("Erro ao enviar o e-mail de verificação:", error);
+    //console.log("Erro ao enviar o e-mail de verificação:", error);
   }
 };
 
