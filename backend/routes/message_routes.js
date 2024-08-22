@@ -3,9 +3,9 @@ const routes = express.Router();
 const bodyParser = require("body-parser");
 const { message_controller } = require("../config/database");
 
-//BODY PARSER
-routes.use(bodyParser.urlencoded({ extended: false }));
-routes.use(bodyParser.json());
+//Middlewares
+const authenticateJWT = require("../middlewares/auth");
+routes.use(authenticateJWT);
 
 //ROUTES
 

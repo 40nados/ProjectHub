@@ -12,9 +12,7 @@ const InsertPublication = async (req, res) => {
 
   const imageUrl = req.file.location; //Location no S3
 
-  const reqUser = req.params.userid;
-
-  const user = await User.findById(reqUser);
+  const user = await User.findById(req.user);
 
   const newPublication = await Publication.create({
     title,
@@ -40,8 +38,6 @@ const DeletePublication = async (req, res) => {
   const { id } = req.params;
 
   //const reqPhotoId = req.params.id;
-
-  const reqUser = req.body.userId;
   try {
     const publication = await Publication.findById(id);
 
@@ -52,7 +48,7 @@ const DeletePublication = async (req, res) => {
     }
 
     //Publication belongs to user - Publicação pertence ao usuário
-    if (publication.userId != reqUser) {
+    if (publication.userId != req.user) {
       res.status(422).json({ errors: "You can't delete this publication" });
       return;
     }
@@ -133,8 +129,6 @@ const UpdatePublication = async (req, res) => {
   const { id } = req.params;
   const { title, description, project_link, technologies } = req.body;
 
-  const reqUser = req.body.userId;
-
   const publication = await Publication.findById(id);
 
   //Check if publication exists -- Chencado se publicação existe
@@ -144,7 +138,7 @@ const UpdatePublication = async (req, res) => {
   }
 
   //Publication belongs to user - Publicação pertence ao usuário
-  if (publication.userId != reqUser) {
+  if (publication.userId != req.user) {
     res.status(422).json({ errors: "You can't edit this publication" });
     return;
   }
@@ -191,8 +185,6 @@ const UpdatePublication = async (req, res) => {
 //Likes
 const Likes = async (req, res) => {
   const { id } = req.params;
-  const reqUser = req.body.userId;
-
   const publication = await Publication.findById(id);
 
   //Check if publication exists -- Chencado se publicação existe
@@ -202,24 +194,24 @@ const Likes = async (req, res) => {
   }
 
   //Check if user already liked the photo - Publicação Já curtida ou não
-  if (publication.likes.includes(reqUser)) {
+  if (publication.likes.includes(req.user)) {
     publication.likes = publication.likes.filter(
-      (user) => user.toString() !== reqUser.toString()
+      (user) => user.toString() !== req.user.toString()
     );
 
     await publication.save();
     res
       .status(200)
-      .json({ publication: id, userId: reqUser, message: "Desliked" });
+      .json({ publication: id, userId: req.user, message: "Desliked" });
     return;
   } else {
-    publication.likes.push(reqUser);
+    publication.likes.push(req.user);
 
     publication.save();
 
     res.status(200).json({
       publication: id,
-      userId: reqUser,
+      userId: req.user,
       message: "Publication Liked!",
     });
   }
@@ -231,9 +223,7 @@ const Comment = async (req, res) => {
 
   const { comment } = req.body;
 
-  const reqUser = req.body.userId;
-
-  const user = await User.findById(reqUser);
+  const user = await User.findById(req.user);
 
   const publication = await Publication.findById(id);
 
