@@ -28,6 +28,18 @@ async function getPasswordByUsername(username){
     }
 }
 
+async function getPasswordByEmail(email){
+    try{
+        //select com "-" exclui um atributo;
+        //sect sem "-" adiciona apenas os que forem colocados no select
+        return await User.findOne({email}).select('email password').exec();
+    }
+    catch(err){
+        console.log('error', err);
+        return { error: "Server Internal Error", status: 500 };
+    }
+}
+
 async function createUser({ username, password, email, user_photo, language, description }) {
     let newUser = new User({ username, password, email, user_photo, language, description });
     try {
@@ -90,4 +102,4 @@ async function deleteUser(id) {
     }
 }
 
-module.exports = { listAllUsers, getUserById, getPasswordByUsername, createUser, putUser, patchUser, deleteUser }
+module.exports = { listAllUsers, getUserById, getPasswordByUsername, getPasswordByEmail, createUser, putUser, patchUser, deleteUser }

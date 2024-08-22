@@ -1,6 +1,9 @@
 const express = require("express");
 const routes = express.Router();
 
+//Middlewares
+const authenticateJWT = require("../middlewares/auth");
+
 //Controllers
 const {
   InsertPublication,
@@ -23,6 +26,8 @@ const {
 } = require("../middlewares/publicationValidation");
 
 const validate = require("../middlewares/handleValidation");
+
+routes.use(authenticateJWT);
 
 routes.post(
   "/publication/:userid",

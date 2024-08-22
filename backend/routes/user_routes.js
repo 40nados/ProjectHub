@@ -2,6 +2,7 @@ const express = require("express");
 const routes = express.Router();
 
 //Middlewares
+const authenticateJWT = require("../middlewares/auth");
 const validate = require("../middlewares/handleValidation");
 const {
   createUserValidation,
@@ -11,6 +12,7 @@ const {
 //Controllers
 const { user_controller } = require("../config/database");
 
+routes.use(authenticateJWT);
 //ROUTES
 routes.get("/user", async (req, res) => {
   const result = await user_controller.listAllUsers();
