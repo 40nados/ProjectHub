@@ -3,7 +3,7 @@ require("dotenv").config();
 const Publication = require("../models/publication");
 const User = require("../models/user");
 const mongoose = require("mongoose");
-const { s3Client } = require("../awsS3Client"); //Importando Configuração de login AWS
+const { s3Client } = require("../config/awsS3Client"); //Importando Configuração de login AWS
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 //Insert Photo
