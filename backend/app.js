@@ -4,10 +4,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./config/database");
 const jwt = require("jsonwebtoken");
+const { sendVerificationEmail } = require("./config/email");
+const { generateVerificationToken } = require("./Utils/jwtEmail");
 require("dotenv").config();
-
-const { loginUserValidation } = require("./middlewares/userValidation");
-const validate = require("./middlewares/handleValidation");
 
 //Routes
 const message_routes = require("./routes/message_routes");
@@ -19,6 +18,8 @@ const publication_routes = require("./routes/publication_routes");
 
 //Middlewares
 const authenticateJWT = require("./middlewares/auth");
+const { loginUserValidation } = require("./middlewares/userValidation");
+const validate = require("./middlewares/handleValidation");
 
 // const http = require('http');
 // const socketIo = require('socket.io');
@@ -69,14 +70,64 @@ app.get("/", authenticateJWT, (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const user = await db.user_controller.createUser(req.body);
-  // Gera um token com o payload (por exemplo, o nome do usuário)
-  const accessToken = jwt.sign(
-    { user: user.username },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-  res.json({ accessToken });
+  try {
+    // Criando usuário e guardando na variável seus dados
+    const user = await db.user_controller.createUser(req.body);
+
+    // Gerando token para o usuário criado
+    const verificationToken = generateVerificationToken(user);
+
+    // Envia o e-mail de verificação com o token gerado
+    await sendVerificationEmail(user.email, verificationToken);
+
+    // Também pode retornar um token de acesso, se necessário
+    const accessToken = jwt.sign(
+      { user: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Responde com o token de acesso e uma mensagem para verificar o e-mail
+    res.json({
+      accessToken,
+      message:
+        "Usuário criado com sucesso! Verifique seu e-mail para ativar a conta.",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erro ao criar o usuário." });
+  }
+});
+
+// Rota de verificação de e-mail
+app.get("/verify-email", async (req, res) => {
+  const token = req.query.token;
+
+  if (!token) {
+    return res
+      .status(400)
+      .json({ message: "Token de verificação é necessário." });
+  }
+
+  // Verifica o token de verificação de e-mail
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ message: "Token inválido ou expirado." });
+    }
+
+    // Busca o usuário pelo ID decodificado no token
+    const user = await db.user_controller.getUserById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    // Atualiza o status do model do usuário "verificado".
+    user.emailVerified = true;
+    await user.save();
+
+    res.status(200).json({ message: "E-mail verificado com sucesso!" });
+  });
 });
 
 app.post("/login", loginUserValidation(), validate, async (req, res) => {
