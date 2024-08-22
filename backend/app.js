@@ -138,10 +138,24 @@ app.get("/verify-email", async (req, res) => {
 });
 
 app.post("/login", loginUserValidation(), validate, async (req, res) => {
-  const username = req.body.username;
-  const user = await db.user_controller.getPasswordByUsername(username);
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
-  if (req.body.password != user.password) {
+  const username = req.body.username;
+  let user;
+  if (isValidEmail(username)) {
+    console.log('email');
+    user = await db.user_controller.getPasswordByEmail(username);
+    console.log(user);
+  }
+  else {
+    console.log('user');
+    user = await db.user_controller.getPasswordByUsername(username);
+  }
+
+  if (!user || req.body.password != user.password) {
     res.status(401).json({ message: "User or Password not right" });
   } else {
     // Gera um token com o payload (por exemplo, o nome do usuário)

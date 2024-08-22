@@ -1,6 +1,9 @@
 const express = require("express");
 const routes = express.Router();
 
+//Middlewares
+const authenticateJWT = require("../middlewares/auth");
+
 //Importando Controllers
 const {
   InsertPhoto,
@@ -11,6 +14,8 @@ const {
 
 //Importando Middlewares
 const { imageUpload } = require("../middlewares/imageUpload");
+
+routes.use(authenticateJWT);
 
 routes.post("/photo/:userid", imageUpload.single("imageUrl"), InsertPhoto);
 routes.delete("/photo/:id", DeletePhoto);

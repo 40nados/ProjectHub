@@ -2,6 +2,10 @@ const express = require("express");
 const routes = express.Router();
 const { chat_controller } = require("../config/database");
 
+//Middlewares
+const authenticateJWT = require("../middlewares/auth");
+routes.use(authenticateJWT);
+
 //ROUTES
 routes.get("/chat", async (req, res) => {
   const result = await chat_controller.listAllChats();
