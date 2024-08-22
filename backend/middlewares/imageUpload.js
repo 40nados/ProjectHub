@@ -19,12 +19,9 @@ const imageStorage = multerS3({
       folder = "photos";
     }
 
-    console.log(req.baseUrl);
-
     const filename = Date.now() + path.extname(file.originalname);
     const key = `uploads/${folder}/${filename}`; // Cria a pasta uploads no bucket --> uploads/user e uploads/image quando setado no BaseUrl
     cb(null, key);
-    console.log(key);
   },
 });
 
