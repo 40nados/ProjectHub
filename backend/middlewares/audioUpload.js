@@ -1,7 +1,7 @@
 require("dotenv").config();
 const multer = require("multer");
 const path = require("path");
-const { s3Client } = require("../awsS3Client"); //Importando Configuração de login AWS
+const { s3Client } = require("../config/awsS3Client"); //Importando Configuração de login AWS
 const multerS3 = require("multer-s3");
 
 //Setando multerS3, bucketName e criação de pasta no bucket

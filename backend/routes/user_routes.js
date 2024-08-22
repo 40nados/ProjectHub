@@ -9,7 +9,7 @@ const {
 } = require("../middlewares/userValidation");
 
 //Controllers
-const { user_controller } = require("../database");
+const { user_controller } = require("../config/database");
 
 //ROUTES
 routes.get("/user", async (req, res) => {
