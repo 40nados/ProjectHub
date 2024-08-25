@@ -24,13 +24,14 @@ const {
   commentValidation,
   publicationUpdateValidation,
 } = require("../middlewares/publicationValidation");
-
+const checkEmailVerified = require("../middlewares/checkEmailVerified");
 const validate = require("../middlewares/handleValidation");
 
 routes.use(authenticateJWT);
 
 routes.post(
   "/publication/:userid",
+  checkEmailVerified,
   imageUpload.single("imageUrl"),
   publicationInsertValidation(),
   validate,

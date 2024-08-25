@@ -151,7 +151,7 @@ app.post("/resend-verification", async (req, res) => {
     }
 
     // Se TRUE é porque ja está verificado, então não segue com o processo de reenvio, evitando requests atoa
-    if (user.isVerified) {
+    if (user.emailVerified) {
       return res
         .status(400)
         .json({ message: "Este e-mail já foi verificado." });
