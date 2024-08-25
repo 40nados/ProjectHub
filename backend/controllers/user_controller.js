@@ -26,7 +26,17 @@ async function getPasswordByUsername(username) {
   }
 }
 
-<<<<<<< HEAD
+async function getPasswordByEmail(email) {
+  try {
+    //select com "-" exclui um atributo;
+    //sect sem "-" adiciona apenas os que forem colocados no select
+    return await User.findOne({ email }).select("email password").exec();
+  } catch (err) {
+    console.log("error", err);
+    return { error: "Server Internal Error", status: 500 };
+  }
+}
+
 async function createUser({
   username,
   password,
@@ -44,32 +54,9 @@ async function createUser({
     description,
   });
   try {
-    // Verifica se o e-mail já está registrado
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return { error: "O e-mail já foi está registrado.", status: 400 };
-=======
-async function getPasswordByEmail(email){
-    try{
-        //select com "-" exclui um atributo;
-        //sect sem "-" adiciona apenas os que forem colocados no select
-        return await User.findOne({email}).select('email password').exec();
-    }
-    catch(err){
-        console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
-    }
-}
-
-async function createUser({ username, password, email, user_photo, language, description }) {
-    let newUser = new User({ username, password, email, user_photo, language, description });
-    try {
-        await newUser.save();
-        return newUser ;
-    } catch (err) {
-        console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
->>>>>>> 58ad8e59c146bcaedea9a504813eb3f88fe53257
     }
 
     await newUser.save();
@@ -157,16 +144,13 @@ async function deleteUser(id) {
   }
 }
 
-<<<<<<< HEAD
 module.exports = {
   listAllUsers,
   getUserById,
   getPasswordByUsername,
+  getPasswordByEmail,
   createUser,
   putUser,
   patchUser,
   deleteUser,
 };
-=======
-module.exports = { listAllUsers, getUserById, getPasswordByUsername, getPasswordByEmail, createUser, putUser, patchUser, deleteUser }
->>>>>>> 58ad8e59c146bcaedea9a504813eb3f88fe53257

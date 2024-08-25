@@ -21,7 +21,7 @@ const sendVerificationEmail = async (userEmail, token) => {
         <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
           <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #121212; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
             <h2 style="color: #fff; text-align: center;">Bem-vindo(a) ao ProjectHub!</h2>
-            <img src="https://cdn.discordapp.com/attachments/720147957760000036/1276029623947362347/image.png?ex=66c80ab1&is=66c6b931&hm=4b62e203f369d6957d9caf5cf741566fe437c600b28902f46b1f23108731668f&" alt = "envelope" style="max-width: 100%; height: auto; border-radius: 10px"></img>
+            <img src="https://i.imgur.com/nA08KOc.png" alt = "logo" style="max-width: 100%; height: auto; border-radius: 10px"></img>
             <p style="font-size: 16px; color: #666666; text-align: center;">
               Obrigado por se registrar conosco! Para concluir o processo de registro e ativar sua conta, por favor, clique no botão abaixo.
             </p>

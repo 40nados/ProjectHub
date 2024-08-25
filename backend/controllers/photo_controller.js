@@ -12,7 +12,9 @@ const InsertPhoto = async (req, res) => {
 
   const imageUrl = req.file.location; //Location no S3
 
-  const user = await User.findById(req.user);
+  const reqUser = req.params.userid;
+
+  const user = await User.findById(reqUser);
 
   const newPhoto = await Photo.create({
     title,
@@ -33,7 +35,10 @@ const InsertPhoto = async (req, res) => {
 //DeletePhoto
 const DeletePhoto = async (req, res) => {
   const { id } = req.params;
-  
+
+  //const reqPhotoId = req.params.id;
+
+  const reqUser = req.body.userId;
   try {
     const photo = await Photo.findById(id);
 
@@ -44,7 +49,7 @@ const DeletePhoto = async (req, res) => {
     }
 
     //Photo belongs to user - Foto pertence ao usuário
-    if (photo.userId != req.user) {
+    if (photo.userId != reqUser) {
       res.status(422).json({ errors: "You can't delete this photo" });
       return;
     }
