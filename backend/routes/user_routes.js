@@ -13,6 +13,7 @@ const {
 const { user_controller } = require("../config/database");
 
 routes.use(authenticateJWT);
+
 //ROUTES
 routes.get("/user", async (req, res) => {
   const result = await user_controller.listAllUsers();
