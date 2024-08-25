@@ -7,6 +7,7 @@ const user = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   emailVerified: { type: Boolean, default: false },
+  lastVerificationEmailSent: {type: Date, default: null },
   user_photo: { type: String },
   language: { type: String, default: "pt" },
   description: { type: String },

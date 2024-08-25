@@ -132,6 +132,54 @@ app.get("/verify-email", async (req, res) => {
   });
 });
 
+
+//Reenviar verificação de email caso necessário
+app.post("/resend-verification", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: "E-mail é obrigatório." });
+    }
+
+    const user = await db.user_controller.getUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    // Se TRUE é porque ja está verificado, então não segue com o processo de reenvio, evitando requests atoa
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Este e-mail já foi verificado." });
+    }
+
+    // Verifica quando foi enviado o último e-mail de verificação
+    const now = new Date();
+    const timeSinceLastEmail = now - user.lastVerificationEmailSent;
+
+    // Permite novo envio somente após 15 minutos (900000ms)
+    if (user.lastVerificationEmailSent && timeSinceLastEmail < 900000) {
+      return res.status(429).json({ message: "Aguarde 15 minutos antes de solicitar novamente." });
+    }
+
+    // Gerando novo token de verificação
+    const verificationToken = generateVerificationToken(user);
+
+    // Atualiza o campo `lastVerificationEmailSent`
+    user.lastVerificationEmailSent = now;
+    await user.save();
+
+    // Envia o e-mail de verificação
+    await sendVerificationEmail(user.email, verificationToken);
+
+    res.json({ message: "Um novo e-mail de verificação foi enviado." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erro ao reenviar o e-mail de verificação." });
+  }
+});
+
+
 app.post("/login", loginUserValidation(), validate, async (req, res) => {
   function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;

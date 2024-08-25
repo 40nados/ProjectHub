@@ -37,6 +37,17 @@ async function getPasswordByEmail(email) {
   }
 }
 
+async function getUserByEmail(email) {
+  try {
+      // Encontra o usuário pelo e-mail, exclui a senha dos resultados
+      return await User.findOne({ email }).select('-password').exec();
+  } catch (err) {
+      console.log('error', err);
+      return { error: "Server Internal Error", status: 500 };
+  }
+}
+
+
 async function createUser({
   username,
   password,
@@ -149,6 +160,7 @@ module.exports = {
   getUserById,
   getPasswordByUsername,
   getPasswordByEmail,
+  getUserByEmail,
   createUser,
   putUser,
   patchUser,
