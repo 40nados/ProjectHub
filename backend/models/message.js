@@ -7,7 +7,7 @@ const message = new mongoose.Schema(
     chat: { type: String, ref: "Chat", required: true },
     sender: { type: String, ref: "User", required: true },
     type: { type: String, enum: ["text", "image", "audio"], required: true },
-    content: { type: String, required: true },
+    content: { type: String },
     url: { type: String }
   },
   { timestamps: true }
