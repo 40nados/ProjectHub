@@ -2,12 +2,26 @@ const express = require("express");
 const routes = express.Router();
 const bodyParser = require("body-parser");
 const { message_controller } = require("../config/database");
+const { imageUpload } = require("../middlewares/imageUpload");
+const { audioUpaload } = require("../middlewares/imageUpload");
 
 //Middlewares
 const authenticateJWT = require("../middlewares/auth");
 routes.use(authenticateJWT);
 
 //ROUTES
+
+const selectUpload = (req, res, next) => {
+  if (req.headers.type == 'image') {
+    imageUpload.single("imageUrl")(req, res, next);
+  }
+  else if (req.headers.type == 'audio') {
+    audioUpaload.single("audioUrl")(req, res, next);
+  }
+  else {
+    next()
+  }
+}
 
 routes.get("/message/:chatId", async (req, res) => {
   const { limit, page } = req.query;
@@ -21,18 +35,19 @@ routes.get("/message/:chatId", async (req, res) => {
   else res.send(result);
 });
 
-routes.post("/message/:chatId", async (req, res) => {
-  if (req.body.type == "text") {
-    const result = await message_controller.createMessage(
-      req.params.chatId,
-      req.body
-    );
-    if (result.error) res.status(result.status).json(result.error);
-    else res.send(result);
-  } else if (req.body.type == "image") {
-    // Manupular o s3
-  } else if (req.body.type == "audio") {
-    // Manupular o s3
+routes.post("/message/:chatId", selectUpload, async (req, res) => {
+  req.body.url = req.file?.location || '';
+  req.body.type = req.headers.type || '';
+  req.body.content = req.body.content || '';
+  const result = await message_controller.createMessage(
+    req.params.chatId,
+    req.body
+  );
+  if (result.error) {
+    res.status(result.status).json(result.error);
+  }
+  else {
+    res.send(result);
   }
 });
 

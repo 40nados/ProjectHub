@@ -56,7 +56,7 @@ const DeletePhoto = async (req, res) => {
 
     const key = photo.url.split(".com/")[1];
 
-    const url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`; //Pegando url da imagem para deletar no bucket, e garantindo que ela esta no formato correto
+    // const url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`; //Pegando url da imagem para deletar no bucket, e garantindo que ela esta no formato correto
 
     const deleteParams = {
       Bucket: process.env.S3_BUCKET_NAME,

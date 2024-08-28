@@ -5,14 +5,14 @@ const bodyParser = require("body-parser");
 const db = require("./config/database");
 const jwt = require("jsonwebtoken");
 const { sendVerificationEmail } = require("./config/email");
-const { generateVerificationToken } = require("./Utils/jwtEmail");
+const { generateVerificationToken } = require("./utils/jwtEmail");
 require("dotenv").config();
 
 //Routes
 const message_routes = require("./routes/message_routes");
 const user_routes = require("./routes/user_routes");
 const chat_routes = require("./routes/chat_routes");
-const photo_routes = require("./routes/photo_Routes");
+const photo_routes = require("./routes/photo_routes");
 const audio_routes = require("./routes/audio_routes");
 const publication_routes = require("./routes/publication_routes");
 

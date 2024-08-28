@@ -5,7 +5,8 @@ const { DeletePhoto } = require("../controllers/photo_controller")
 
 async function getMessages(chatId, limit, offset) {
     try{
-        const result = await Message.find({chat: chatId}).skip(offset).limit(limit).exec();
+        const result = await Message.find({chat: chatId}).skip(offset).limit(limit)
+        .sort([["createdAt", -1]]).exec();
         return result;
     }catch(error){
         console.log('error', err);
@@ -18,8 +19,8 @@ async function createMessage(chatId, body) {
     session.startTransaction();
 
     try {
-        const { sender, type, content } = body;
-        let message = new Message({ sender, type, content, chat: chatId });
+        const { sender, type, content, url } = body;
+        let message = new Message({ sender, type, content, url, chat: chatId });
         const savedMessage = await message.save({session});
 
         const updatedChat = await Chat.updateMany(
