@@ -12,7 +12,9 @@ const InsertAudio = async (req, res) => {
 
   const audioUrl = req.file.location; //Location no S3
 
-  const user = await User.findById(req.user);
+  const reqUser = req.params.userid;
+
+  const user = await User.findById(reqUser);
 
   const newAudio = await Audio.create({
     title,
@@ -34,6 +36,8 @@ const InsertAudio = async (req, res) => {
 const DeleteAudio = async (req, res) => {
   const { id } = req.params;
 
+  const reqUser = req.body.userId;
+
   try {
     const audio = await Audio.findById(id);
 
@@ -44,7 +48,7 @@ const DeleteAudio = async (req, res) => {
     }
 
     //Audio belongs to user - Audio pertence ao usuário
-    if (audio.userId != req.user) {
+    if (audio.userId != reqUser) {
       res.status(403).json({ errors: "You can't delete this audio" });
     }
 

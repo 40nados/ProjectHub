@@ -1,14 +1,15 @@
 // authMiddleware.js
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 // Middleware de autenticação
 const authenticateJWT = (req, res, next) => {
+  //console.log("Middleware de autenticação acionado para a rota:", req.path); // Log de debug
+
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(" ")[1];
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
