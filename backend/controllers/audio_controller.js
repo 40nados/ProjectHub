@@ -1,40 +1,40 @@
 //Imports
-require("dotenv").config();
-const Audio = require("../models/audio");
-const User = require("../models/user");
-const mongoose = require("mongoose");
-const { s3Client } = require("../config/awsS3Client"); //Importando Configuração de login AWS
-const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
+require('dotenv').config();
+const Audio = require('../models/audio');
+const User = require('../models/user');
+const mongoose = require('mongoose');
+const { s3Client } = require('../config/awsS3Client'); //Importando Configuração de login AWS
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 //Insert Audio
 const InsertAudio = async (req, res) => {
-  const { title } = req.body;
+    const { title } = req.body;
 
-  const audioUrl = req.file.location; //Location no S3
+    const audioUrl = req.file.location; //Location no S3
 
-  const reqUser = req.params.userid;
+    const reqUser = req.params.userid;
 
-  const user = await User.findById(reqUser);
+    const user = await User.findById(reqUser);
 
-  const newAudio = await Audio.create({
-    title,
-    userId: user.id,
-    userName: user.username,
-    url: audioUrl,
-  });
+    const newAudio = await Audio.create({
+        title,
+        userId: user.id,
+        userName: user.username,
+        url: audioUrl,
+    });
 
   if (!newAudio) {
     res.status(422).json({ error: "Error. Try later." });
 
-    return;
-  }
+        return;
+    }
 
-  res.status(201).json(newAudio);
+    res.status(201).json(newAudio);
 };
 
 //DeleteAudio
 const DeleteAudio = async (req, res) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
   const reqUser = req.body.userId;
 
@@ -54,12 +54,12 @@ const DeleteAudio = async (req, res) => {
 
     const key = audio.url.split(".com/")[1];
 
-    const url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`; //Pegando url do audio para deletar no bucket, e garantindo que ela esta no formato correto
+        const url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`; //Pegando url do audio para deletar no bucket, e garantindo que ela esta no formato correto
 
-    const deleteParams = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: key,
-    };
+        const deleteParams = {
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: key,
+        };
 
     try {
       await s3Client.send(new DeleteObjectCommand(deleteParams));
@@ -84,19 +84,19 @@ const DeleteAudio = async (req, res) => {
 
 //GetAllAudios
 const GetAllAudios = async (req, res) => {
-  const audios = await Audio.find({})
-    .sort([["createdAt", -1]])
-    .exec();
+    const audios = await Audio.find({})
+        .sort([['createdAt', -1]])
+        .exec();
 
-  return res.status(200).json(audios); //All Audios - Exibindo todas os audios
+    return res.status(200).json(audios); //All Audios - Exibindo todas os audios
 };
 
 //GetAudioById
 const GetAudioById = async (req, res) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
-  try {
-    const audio = await Audio.findById(id);
+    try {
+        const audio = await Audio.findById(id);
 
     if (!audio) {
       res.status(404).json({ error: "Audio not found" }); // Audio not found - Audio não encontrada
@@ -111,8 +111,8 @@ const GetAudioById = async (req, res) => {
 };
 
 module.exports = {
-  InsertAudio,
-  DeleteAudio,
-  GetAllAudios,
-  GetAudioById,
+    InsertAudio,
+    DeleteAudio,
+    GetAllAudios,
+    GetAudioById,
 }; //Exportando las funciones
