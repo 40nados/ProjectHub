@@ -26,22 +26,22 @@ routes.get("/user/:id", async (req, res) => {
   const result = await user_controller.getUserById(req.params.id);
   if (result) {
     if (result.error) {
-      res.status(result.status).json(result.error);
+      res.status(result.status).json(result);
     }
     res.send(result);
-  } else res.status(404).json("User not found");
+  } else res.status(404).json({error: "User not found"});
 });
 
 routes.post("/user", createUserValidation(), validate, async (req, res) => {
   const result = await user_controller.createUser(req.body);
-  if (result.error) res.status(result.status).json(result.error);
+  if (result.error) res.status(result.status).json(result);
   else res.send(result);
 });
 
 routes.patch("/user/:id", updateUserValidation(), validate, imageUpload.single('imageUrl'), async (req, res) => {
   req.body.user_photo = req.file?.location || "";
   const result = await user_controller.patchUser(req.params.id, req.body);
-  if (result.error) res.status(result.status).json(result.error);
+  if (result.error) res.status(result.status).json(result);
   else res.send(result);
 }
 );
@@ -50,10 +50,10 @@ routes.delete("/user/:id", async (req, res) => {
   const result = await user_controller.deleteUser(req.params.id);
   if (result) {
     if (result.error) {
-      res.status(result.status).json(result.error);
+      res.status(result.status).json(result);
     }
     res.status(200).json({ message: "User Deleted Succesfully!" });
-  } else res.status(404).json("User not found");
+  } else res.status(404).json({error: "User not found"});
 });
 
 module.exports = routes;
