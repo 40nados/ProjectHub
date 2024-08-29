@@ -71,7 +71,7 @@ app.post('/register', createUserValidation(), validate, async (req, res) => {
 
         if (result.error) {
             // Se o resultado contém um erro (e-mail já registrado)
-            return res.status(result.status).json({ message: result.error });
+            return res.status(result.status).json({ error: result.error });
         }
 
         const user = result;
@@ -91,11 +91,11 @@ app.post('/register', createUserValidation(), validate, async (req, res) => {
         res.json({
             accessToken,
             id: user.id,
-            message: 'Usuário criado com sucesso! Verifique seu e-mail para ativar a conta.',
+            message: 'User created successfully! Verify your email address to activate account.',
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Erro ao criar o usuário.' });
+        res.status(500).json({ error: 'Error to create user.' });
     }
 });
 
@@ -104,27 +104,29 @@ app.get('/verify-email', async (req, res) => {
     const token = req.query.token;
 
     if (!token) {
-        return res.status(400).json({ message: 'Token de verificação é necessário.' });
+        return res.status(400).json({ error: 'Access Token is required!' });
     }
 
     // Verifica o token de verificação de e-mail
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
         if (err) {
-            return res.status(400).json({ message: 'Token inválido ou expirado.' });
+            return res
+                .status(400)
+                .json({ error: 'Invalid Access token or token has been expired.' });
         }
 
         // Busca o usuário pelo ID decodificado no token
         const user = await db.user_controller.getUserById(decoded.userId);
 
         if (!user) {
-            return res.status(404).json({ message: 'Usuário não encontrado.' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
         // Atualiza o status do model do usuário "verificado".
         user.emailVerified = true;
         await user.save();
 
-        res.status(200).json({ message: 'E-mail verificado com sucesso!' });
+        res.status(200).json({ message: 'Email verified successfully!' });
     });
 });
 
@@ -134,18 +136,18 @@ app.post('/resend-verification', async (req, res) => {
 
     try {
         if (!email) {
-            return res.status(400).json({ message: 'E-mail é obrigatório.' });
+            return res.status(400).json({ error: 'E-mail is required.' });
         }
 
         const user = await db.user_controller.getUserByEmail(email);
 
         if (!user) {
-            return res.status(404).json({ message: 'Usuário não encontrado.' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
         // Se TRUE é porque ja está verificado, então não segue com o processo de reenvio, evitando requests atoa
         if (user.emailVerified) {
-            return res.status(400).json({ message: 'Este e-mail já foi verificado.' });
+            return res.status(400).json({ error: 'Email already verified.' });
         }
 
         // Verifica quando foi enviado o último e-mail de verificação
@@ -156,7 +158,7 @@ app.post('/resend-verification', async (req, res) => {
         if (user.lastVerificationEmailSent && timeSinceLastEmail < 900000) {
             return res
                 .status(429)
-                .json({ message: 'Aguarde 15 minutos antes de solicitar novamente.' });
+                .json({ error: 'Please wait 15 minutes before requesting again.' });
         }
 
         const verificationToken = generateVerificationToken(user);
@@ -168,10 +170,10 @@ app.post('/resend-verification', async (req, res) => {
         // Envia o e-mail de verificação
         await sendVerificationEmail(user.email, verificationToken);
 
-        res.json({ message: 'Um novo e-mail de verificação foi enviado.' });
+        res.json({ message: 'A new verification email has been sent.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Erro ao reenviar o e-mail de verificação.' });
+        res.status(500).json({ error: 'Error to re-send a verification email.' });
     }
 });
 
@@ -191,7 +193,7 @@ app.post('/login', loginUserValidation(), validate, async (req, res) => {
     }
 
     if (!user || req.body.password != user.password) {
-        res.status(404).json({ message: 'User or Password not right' });
+        res.status(404).json({ error: 'User or Password not right' });
     } else {
         // Gera um token com o payload (por exemplo, o nome do usuário)
         const accessToken = jwt.sign({ user: username }, process.env.JWT_SECRET, {
