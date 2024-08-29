@@ -21,15 +21,12 @@ const authenticateJWT = require('./middlewares/auth');
 const { loginUserValidation, createUserValidation } = require('./middlewares/userValidation');
 const validate = require('./middlewares/handleValidation');
 
-// const http = require('http');
-// const socketIo = require('socket.io');
+const http = require('http');
+const socketIo = require('socket.io');
 
 //Servers Configs
 const app = express();
 const port = 8081;
-
-//const server = http.createServer(app);
-// const io = socketIo(server);
 
 //body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -39,7 +36,11 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //Socket
-/* io.on('connection', (socket) => {
+
+// const server = http.createServer(app);
+// const io = socketIo(server);
+
+//  io.on('connection', (socket) => {
 //   console.log('Novo cliente conectado:', socket.id);
 
 //   socket.on('joinRoom', (room) => {
@@ -55,7 +56,7 @@ app.use(cors());
 //   socket.on('disconnect', () => {
 //     console.log('Cliente desconectado:', socket.id);
 //   });
-// }); */
+// });
 
 //ROUTES
 
