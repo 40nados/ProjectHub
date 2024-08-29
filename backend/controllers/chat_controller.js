@@ -1,19 +1,18 @@
-const Chat = require("../models/chat");
-const User = require("../models/user");
+const Chat = require('../models/chat');
+const User = require('../models/user');
 const mongoose = require('mongoose');
 
 async function listAllChats() {
-    return await Chat.find()
+    return await Chat.find();
 }
 
 async function getChatById(id) {
     try {
         //Para especificar quais atributos de user ele cascatearia: populate('users', 'name email').exec()
         return await Chat.findById(id).populate('users').exec();
-    }
-    catch (err) {
+    } catch (err) {
         console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
+        return { error: 'Server Internal Error', status: 500 };
     }
 }
 
@@ -27,13 +26,13 @@ async function createChat({ name, userIds }) {
         // Verificar se ambos os usuários existem
         const users = await User.find({ _id: { $in: userIds } }).session(session);
         if (users.length !== userIds.length) {
-            throw new Error('Um ou mais usuários não foram encontrados');
+            throw new Error('One or more users not found.');
         }
 
         // Criar um novo chat
         const newChat = new Chat({
             name: name,
-            users: userIds
+            users: userIds,
         });
         const savedChat = await newChat.save({ session });
 
@@ -47,18 +46,15 @@ async function createChat({ name, userIds }) {
         // Comitar a transação
         await session.commitTransaction();
         return savedChat;
-
     } catch (error) {
         await session.abortTransaction();
-        console.error('Erro ao criar o chat:', error);
-        return { message: 'Erro ao criar o chat:', 'error': error }
+        return { error: 'Error to createing the chat:', error: error };
     } finally {
         session.endSession();
     }
 }
 
 async function joinUser(id, userId) {
-
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -80,11 +76,9 @@ async function joinUser(id, userId) {
         // Comitar a transação
         await session.commitTransaction();
         return { chat: updatedChat, user: updateduser };
-
     } catch (error) {
         await session.abortTransaction();
-        console.error('Erro ao atualizar o chat:', error);
-        return { message: 'Erro ao atualizar o chat:', 'error': error }
+        return { error: 'Error to updatings the chat:', error: error };
     } finally {
         session.endSession();
     }
@@ -93,10 +87,10 @@ async function joinUser(id, userId) {
 async function editName(id, { name }) {
     try {
         let currentChat = await Chat.findByIdAndUpdate(id, { name: name }, { new: true });
-        return currentChat ? currentChat : { "error": "User not found", "status": 404 };
+        return currentChat ? currentChat : { error: 'User not found', status: 404 };
     } catch (err) {
         console.log('erro', err);
-        return { error: "Server Internal Error", status: 404 };
+        return { error: 'Server Internal Error', status: 404 };
     }
 }
 
@@ -117,16 +111,13 @@ async function removeUserFromChat(id, userId) {
             { _id: id, users: userId },
             { $pull: { users: userId } },
             { session }
-        )
+        );
 
         // Comitar a transação
         await session.commitTransaction();
         return { chat: updatedChat, user: updateduser };
-
-
     } catch (error) {
-        console.log(error);
-        return { message: 'Erro ao atualizar o chat:', 'error': error }
+        return { error: 'Error to updating the chat:', error: error };
     } finally {
         session.endSession();
     }
@@ -140,7 +131,6 @@ async function deleteChat(id) {
         const result = await Chat.findById(id).select('users').exec();
         await Chat.findByIdAndDelete(id);
 
-
         const updatedusers = await User.updateMany(
             { _id: result.users },
             { $pull: { chats: id } },
@@ -151,11 +141,19 @@ async function deleteChat(id) {
         await session.commitTransaction();
         return { users: updatedusers };
     } catch (err) {
-        console.log(err)
-        return { "message": err };
-    }finally{
+        //console.log(err);
+        return { error: err };
+    } finally {
         session.endSession();
     }
 }
 
-module.exports = { listAllChats, getChatById, joinUser, createChat, editName, removeUserFromChat, deleteChat }
+module.exports = {
+    listAllChats,
+    getChatById,
+    joinUser,
+    createChat,
+    editName,
+    removeUserFromChat,
+    deleteChat,
+};

@@ -1,34 +1,34 @@
-const { body } = require("express-validator");
+const { body } = require('express-validator');
 
 const publicationInsertValidation = () => {
-  return [
-    body("title")
-      .not()
-      .equals("undefined")
-      .withMessage("O título é obrigatório!")
-      .isString()
-      .withMessage("O título é obrigatório!")
-      .isLength({ min: 3 })
-      .withMessage("O título precisa ter no mínimo 3 caracteres."),
-  ];
+    return [
+        body('title')
+            .not()
+            .equals('undefined')
+            .withMessage('Title is required!')
+            .isString()
+            .withMessage('Title is required!')
+            .isLength({ min: 3 })
+            .withMessage('Title must be at least 3 characters long.'),
+    ];
 };
 
 const publicationUpdateValidation = () => {
-  return [
-    body("title")
-      .isString()
-      .withMessage("O título é obrigatório!")
-      .isLength({ min: 3 })
-      .withMessage("O título precisa ter no mínimo 3 caracteres."),
-  ];
+    return [
+        body('title')
+            .isString()
+            .withMessage('Title is required!')
+            .isLength({ min: 3 })
+            .withMessage('Title must be at least 3 characters long.'),
+    ];
 };
 
 const commentValidation = () => {
-  return [body("comment").isString().withMessage("O Comentário é obrigatório")];
+    return [body('comment').isString().withMessage('Comment is required')];
 };
 
 module.exports = {
-  publicationInsertValidation,
-  publicationUpdateValidation,
-  commentValidation,
+    publicationInsertValidation,
+    publicationUpdateValidation,
+    commentValidation,
 };
