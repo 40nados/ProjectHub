@@ -1,17 +1,20 @@
-const Message = require("../models/message");
-const Chat = require("../models/chat");
+const Message = require('../models/message');
+const Chat = require('../models/chat');
 const mongoose = require('mongoose');
-const { s3Client } = require("../config/awsS3Client");
-const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { s3Client } = require('../config/awsS3Client');
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 async function getMessages(chatId, limit, offset) {
     try {
-        const result = await Message.find({ chat: chatId }).skip(offset).limit(limit)
-            .sort([["createdAt", -1]]).exec();
+        const result = await Message.find({ chat: chatId })
+            .skip(offset)
+            .limit(limit)
+            .sort([['createdAt', -1]])
+            .exec();
         return result;
     } catch (error) {
         console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
+        return { error: 'Server Internal Error', status: 500 };
     }
 }
 
@@ -32,10 +35,9 @@ async function createMessage(chatId, body) {
 
         await session.commitTransaction();
         return { message: savedMessage, chat: updatedChat };
-
     } catch (err) {
         console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
+        return { error: 'Server Internal Error', status: 500 };
     } finally {
         session.endSession();
     }
@@ -48,7 +50,7 @@ async function editMessage(messageId, body) {
     try {
         const { content, url } = body;
         const message = await Message.findById(messageId);
-        const oldImageKey = message.url.split(".com/")[1];
+        const oldImageKey = message.url.split('.com/')[1];
         message.content = content;
         message.url = url;
 
@@ -63,9 +65,8 @@ async function editMessage(messageId, body) {
         return message;
     } catch (error) {
         console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
+        return { error: 'Server Internal Error', status: 500 };
     } finally {
-
     }
 }
 
@@ -76,7 +77,7 @@ async function deleteMessage(messageId) {
     try {
         const message = await Message.findById(messageId).select('chat url').exec();
         if (!message) {
-            throw new Error("Não há mensagens com esse id");
+            throw new Error("There isn't any messages with this id.");
         }
         await Message.findByIdAndDelete(messageId);
 
@@ -87,7 +88,7 @@ async function deleteMessage(messageId) {
         );
 
         if (message.url) {
-            const key = message.url.split(".com/")[1];
+            const key = message.url.split('.com/')[1];
             const deleteParams = {
                 Bucket: process.env.S3_BUCKET_NAME,
                 Key: key,
@@ -100,8 +101,8 @@ async function deleteMessage(messageId) {
         return { chat: updatedChat };
     } catch (err) {
         console.log('error', err);
-        return { error: "Server Internal Error", status: 500 };
+        return { error: 'Server Internal Error', status: 500 };
     }
 }
 
-module.exports = { getMessages, createMessage, editMessage, deleteMessage }
+module.exports = { getMessages, createMessage, editMessage, deleteMessage };
