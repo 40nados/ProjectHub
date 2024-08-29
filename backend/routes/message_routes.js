@@ -3,7 +3,7 @@ const routes = express.Router();
 const bodyParser = require("body-parser");
 const { message_controller } = require("../config/database");
 const { imageUpload } = require("../middlewares/imageUpload");
-const { audioUpaload } = require("../middlewares/imageUpload");
+const { audioUpload } = require("../middlewares/audioUpload");
 
 //Middlewares
 const authenticateJWT = require("../middlewares/auth");
@@ -16,7 +16,7 @@ const selectUpload = (req, res, next) => {
     imageUpload.single("imageUrl")(req, res, next);
   }
   else if (req.headers.type == 'audio') {
-    audioUpaload.single("audioUrl")(req, res, next);
+    audioUpload.single("audioUrl")(req, res, next);
   }
   else {
     next()
@@ -38,7 +38,6 @@ routes.get("/message/:chatId", async (req, res) => {
 routes.post("/message/:chatId", selectUpload, async (req, res) => {
   req.body.url = req.file?.location || '';
   req.body.type = req.headers.type || '';
-  req.body.content = req.body.content || '';
   const result = await message_controller.createMessage(
     req.params.chatId,
     req.body
@@ -51,7 +50,9 @@ routes.post("/message/:chatId", selectUpload, async (req, res) => {
   }
 });
 
-routes.put("/message/:messageId", async (req, res) => {
+routes.put("/message/:messageId", selectUpload, async (req, res) => {
+  req.body.url = req.file?.location || '';
+  req.body.type = req.headers.type || '';
   const result = await message_controller.editMessage(
     req.params.messageId,
     req.body

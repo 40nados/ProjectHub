@@ -1,14 +1,15 @@
 const Message = require("../models/message");
 const Chat = require("../models/chat");
 const mongoose = require('mongoose');
-const { DeletePhoto } = require("../controllers/photo_controller")
+const { s3Client } = require("../config/awsS3Client");
+const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 async function getMessages(chatId, limit, offset) {
-    try{
-        const result = await Message.find({chat: chatId}).skip(offset).limit(limit)
-        .sort([["createdAt", -1]]).exec();
+    try {
+        const result = await Message.find({ chat: chatId }).skip(offset).limit(limit)
+            .sort([["createdAt", -1]]).exec();
         return result;
-    }catch(error){
+    } catch (error) {
         console.log('error', err);
         return { error: "Server Internal Error", status: 500 };
     }
@@ -21,7 +22,7 @@ async function createMessage(chatId, body) {
     try {
         const { sender, type, content, url } = body;
         let message = new Message({ sender, type, content, url, chat: chatId });
-        const savedMessage = await message.save({session});
+        const savedMessage = await message.save({ session });
 
         const updatedChat = await Chat.updateMany(
             { _id: { $in: chatId } },
@@ -35,7 +36,7 @@ async function createMessage(chatId, body) {
     } catch (err) {
         console.log('error', err);
         return { error: "Server Internal Error", status: 500 };
-    }finally{
+    } finally {
         session.endSession();
     }
 }
@@ -44,17 +45,26 @@ async function editMessage(messageId, body) {
     const session = await mongoose.startSession();
     session.startTransaction();
 
-    try{
-        const { content } = body;
-        const result = await Message.updateOne(
-            { _id: messageId, type: 'text' },
-            { $set: { content: content } } 
-        );
-        return result;
-    }catch(error){
+    try {
+        const { content, url } = body;
+        const message = await Message.findById(messageId);
+        const oldImageKey = message.url.split(".com/")[1];
+        message.content = content;
+        message.url = url;
+
+        const deleteParams = {
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: oldImageKey,
+        };
+        await s3Client.send(new DeleteObjectCommand(deleteParams));
+
+        await message.save();
+
+        return message;
+    } catch (error) {
         console.log('error', err);
         return { error: "Server Internal Error", status: 500 };
-    }finally{
+    } finally {
 
     }
 }
@@ -64,14 +74,26 @@ async function deleteMessage(messageId) {
     session.startTransaction();
 
     try {
-        const result = await Message.findById(messageId).select('chat').exec();
+        const message = await Message.findById(messageId).select('chat url').exec();
+        if (!message) {
+            throw new Error("Não há mensagens com esse id");
+        }
         await Message.findByIdAndDelete(messageId);
 
         const updatedChat = await Chat.updateMany(
-            { _id: result.chat },
+            { _id: message.chat },
             { $pull: { messages: messageId } },
             { session }
         );
+
+        if (message.url) {
+            const key = message.url.split(".com/")[1];
+            const deleteParams = {
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key: key,
+            };
+            await s3Client.send(new DeleteObjectCommand(deleteParams));
+        }
 
         // Comitar a transação
         await session.commitTransaction();
