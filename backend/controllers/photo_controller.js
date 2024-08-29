@@ -24,7 +24,7 @@ const InsertPhoto = async (req, res) => {
   });
 
   if (!newPhoto) {
-    res.status(422).json({ errors: "Error. Try later." });
+    res.status(422).json({ error: "Error. Try later." });
 
     return;
   }
@@ -44,13 +44,13 @@ const DeletePhoto = async (req, res) => {
 
     //Photo dosn't exist - Foto Não existe
     if (!photo) {
-      res.status(404).json({ errors: "Photo not found" });
+      res.status(404).json({ error: "Photo not found" });
       return;
     }
 
     //Photo belongs to user - Foto pertence ao usuário
     if (photo.userId != reqUser) {
-      res.status(422).json({ errors: "You can't delete this photo" });
+      res.status(422).json({ error: "You can't delete this photo" });
       return;
     }
 
@@ -69,7 +69,7 @@ const DeletePhoto = async (req, res) => {
     } catch (error) {
       //console.log(`Erro ao deletar do s3, link: ${url}`);
       //console.log(error);
-      return res.status(500).json({ errors: "Error deleting file from S3." });
+      return res.status(500).json({ error: "Error deleting file from S3." });
     }
 
     //Deleting photo by DB - Deletando foto do banco
@@ -80,7 +80,7 @@ const DeletePhoto = async (req, res) => {
       .json({ id: photo._id, message: "Photo deleted succesfully!" }); // Success Message - Mensagem de Sucesso
   } catch (error) {
     console.log(error);
-    res.status(500).json({ errors: "Intern Server Error" });
+    res.status(500).json({ error: "Intern Server Error" });
     return;
   }
 };
@@ -102,13 +102,13 @@ const GetPhotoById = async (req, res) => {
     const photo = await Photo.findById(id);
 
     if (!photo) {
-      res.status(404).json({ errors: "Photo not found" }); // Photo Not Found - Foto não encontrada
+      res.status(404).json({ error: "Photo not found" }); // Photo Not Found - Foto não encontrada
       return;
     }
 
     res.status(200).json(photo);
   } catch (error) {
-    res.status(500).json({ errors: "Intern Server Error" }); // Something Error - Algum erro aí
+    res.status(500).json({ error: "Intern Server Error" }); // Something Error - Algum erro aí
     return;
   }
 };

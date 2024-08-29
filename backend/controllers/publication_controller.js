@@ -27,7 +27,7 @@ const InsertPublication = async (req, res) => {
   });
 
   if (!newPublication) {
-    res.status(422).json({ errors: "Error. Try later." });
+    res.status(422).json({ error: "Error. Try later." });
 
     return;
   }
@@ -47,13 +47,13 @@ const DeletePublication = async (req, res) => {
 
     //Publication dosn't exist - Foto Não existe
     if (!publication) {
-      res.status(404).json({ errors: "Publication not found" });
+      res.status(404).json({ error: "Publication not found" });
       return;
     }
 
     //Publication belongs to user - Publicação pertence ao usuário
     if (publication.userId != reqUser) {
-      res.status(422).json({ errors: "You can't delete this publication" });
+      res.status(422).json({ error: "You can't delete this publication" });
       return;
     }
 
@@ -72,7 +72,7 @@ const DeletePublication = async (req, res) => {
     } catch (error) {
       //console.log(`Erro ao deletar do s3, link: ${url}`);
       console.log(error);
-      return res.status(500).json({ errors: "Error deleting file from S3." });
+      return res.status(500).json({ error: "Error deleting file from S3." });
     }
 
     //Deleting publication by DB - Deletando foto do banco
@@ -84,7 +84,7 @@ const DeletePublication = async (req, res) => {
     }); // Success Message - Mensagem de Sucesso
   } catch (error) {
     console.log(error);
-    res.status(500).json({ errors: "Intern Server Error" });
+    res.status(500).json({ error: "Intern Server Error" });
     return;
   }
 };
@@ -117,13 +117,13 @@ const GetPublicationById = async (req, res) => {
     const publication = await Publication.findById(id);
 
     if (!publication) {
-      res.status(404).json({ errors: "Publication not found" }); // Publication Not Found - Publicação não encontrada
+      res.status(404).json({ error: "Publication not found" }); // Publication Not Found - Publicação não encontrada
       return;
     }
 
     res.status(200).json(publication);
   } catch (error) {
-    res.status(500).json({ errors: "Intern Server Error" }); // Something Error - Algum erro aí
+    res.status(500).json({ error: "Intern Server Error" }); // Something Error - Algum erro aí
     return;
   }
 };
@@ -139,13 +139,13 @@ const UpdatePublication = async (req, res) => {
 
   //Check if publication exists -- Chencado se publicação existe
   if (!publication) {
-    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found -- Publicação não encontrada
+    res.status(404).json({ error: "Publication not found" }); // Publication Not Found -- Publicação não encontrada
     return;
   }
 
   //Publication belongs to user - Publicação pertence ao usuário
   if (publication.userId != reqUser) {
-    res.status(422).json({ errors: "You can't edit this publication" });
+    res.status(422).json({ error: "You can't edit this publication" });
     return;
   }
 
@@ -197,7 +197,7 @@ const Likes = async (req, res) => {
 
   //Check if publication exists -- Chencado se publicação existe
   if (!publication) {
-    res.status(404).json({ errors: "Publication not found" }); // Publication Not Found -- Publicação não encontrada
+    res.status(404).json({ error: "Publication not found" }); // Publication Not Found -- Publicação não encontrada
     return;
   }
 

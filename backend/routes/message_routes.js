@@ -31,7 +31,7 @@ routes.get("/message/:chatId", async (req, res) => {
     limit,
     offset
   );
-  if (result.error) res.status(result.status).json(result.error);
+  if (result.error) res.status(result.status).json(result);
   else res.send(result);
 });
 
@@ -43,7 +43,7 @@ routes.post("/message/:chatId", selectUpload, async (req, res) => {
     req.body
   );
   if (result.error) {
-    res.status(result.status).json(result.error);
+    res.status(result.status).json(result);
   }
   else {
     res.send(result);
@@ -57,13 +57,13 @@ routes.put("/message/:messageId", selectUpload, async (req, res) => {
     req.params.messageId,
     req.body
   );
-  if (result.error) res.status(result.status).json(result.error);
+  if (result.error) res.status(result.status).json(result);
   else res.send(result);
 });
 
 routes.delete("/message/:messageId", async (req, res) => {
   const result = await message_controller.deleteMessage(req.params.messageId);
-  if (result.error) res.status(result.status).json(result.error);
+  if (result.error) res.status(result.status).json(result);
   else res.send(result);
 });
 

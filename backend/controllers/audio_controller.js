@@ -24,7 +24,7 @@ const InsertAudio = async (req, res) => {
   });
 
   if (!newAudio) {
-    res.status(422).json({ errors: "Error. Try later." });
+    res.status(422).json({ error: "Error. Try later." });
 
     return;
   }
@@ -43,13 +43,13 @@ const DeleteAudio = async (req, res) => {
 
     //Audio dosn't exist - Audio Não existe
     if (!audio) {
-      res.status(404).json({ errors: "Audio not found" });
+      res.status(404).json({ error: "Audio not found" });
       return;
     }
 
     //Audio belongs to user - Audio pertence ao usuário
     if (audio.userId != reqUser) {
-      res.status(403).json({ errors: "You can't delete this audio" });
+      res.status(403).json({ error: "You can't delete this audio" });
     }
 
     const key = audio.url.split(".com/")[1];
@@ -67,7 +67,7 @@ const DeleteAudio = async (req, res) => {
     } catch (error) {
       //console.log(`Erro ao deletar do s3, link: ${url}`);
       //console.log(error);
-      return res.status(500).json({ errors: "Error deleting file from S3." });
+      return res.status(500).json({ error: "Error deleting file from S3." });
     }
 
     //Deleting audio by DB - Deletando audio do banco
@@ -77,7 +77,7 @@ const DeleteAudio = async (req, res) => {
       .status(200)
       .json({ id: audio._id, message: "Audio deleted succesfully!" }); // Success Message - Mensagem de Sucesso
   } catch (error) {
-    res.status(500).json({ errors: "Intern Server Error" });
+    res.status(500).json({ error: "Intern Server Error" });
     return;
   }
 };
@@ -99,13 +99,13 @@ const GetAudioById = async (req, res) => {
     const audio = await Audio.findById(id);
 
     if (!audio) {
-      res.status(404).json({ errors: "Audio not found" }); // Audio not found - Audio não encontrada
+      res.status(404).json({ error: "Audio not found" }); // Audio not found - Audio não encontrada
       return;
     }
 
     res.status(200).json(audio);
   } catch (error) {
-    res.status(500).json({ errors: "Intern Server Error" }); // Something Error - Algum erro aí
+    res.status(500).json({ error: "Intern Server Error" }); // Something Error - Algum erro aí
     return;
   }
 };
