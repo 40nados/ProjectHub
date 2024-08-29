@@ -195,11 +195,9 @@ app.post("/login", loginUserValidation(), validate, async (req, res) => {
   const username = req.body.username;
   let user;
   if (isValidEmail(username)) {
-    console.log("email");
     user = await db.user_controller.getPasswordByEmail(username);
     console.log(user);
   } else {
-    console.log("user");
     user = await db.user_controller.getPasswordByUsername(username);
   }
 

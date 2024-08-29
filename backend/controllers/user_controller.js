@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const { s3Client } = require("../config/awsS3Client");
+const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 async function listAllUsers() {
   return await User.find();
@@ -39,107 +41,64 @@ async function getPasswordByEmail(email) {
 
 async function getUserByEmail(email) {
   try {
-      // Encontra o usuário pelo e-mail, exclui a senha dos resultados
-      return await User.findOne({ email }).select('-password').exec();
+    // Encontra o usuário pelo e-mail, exclui a senha dos resultados
+    return await User.findOne({ email }).select('-password').exec();
   } catch (err) {
-      console.log('error', err);
-      return { error: "Server Internal Error", status: 500 };
-  }
-}
-
-
-async function createUser({
-  username,
-  password,
-  email,
-  user_photo,
-  language,
-  description,
-}) {
-  let newUser = new User({
-    username,
-    password,
-    email,
-    user_photo,
-    language,
-    description,
-  });
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return { error: "O e-mail já foi está registrado.", status: 400 };
-    }
-
-    await newUser.save();
-    return newUser;
-  } catch (err) {
-    console.log("error", err);
+    console.log('error', err);
     return { error: "Server Internal Error", status: 500 };
   }
 }
 
-async function putUser(
-  id,
-  { username, password, email, user_photo, language, description }
-) {
+
+async function createUser({ username, password, email, user_photo, language, description }) {
+
   try {
-    // Garantir que todos os campos necessários sejam fornecidos
-    if (
-      !username ||
-      !password ||
-      !email ||
-      !user_photo ||
-      !language ||
-      !description
-    ) {
-      throw new Error(
-        "Todos os campos são necessários para uma atualização completa."
-      );
-    }
-
-    const updatedUser = {
-      username,
-      password,
-      email,
-      user_photo,
-      language,
-      description,
-    };
-
-    var currentUser = await User.findByIdAndUpdate(id, updatedUser, {
-      new: true,
-    });
-    return currentUser ? currentUser : { error: "User not found", status: 404 };
+    let newUser = new User({ username, password, email, user_photo, language, description });
+    await newUser.save();
+    return newUser;
   } catch (err) {
-    console.log("erro", err);
-    return { error: "Server Internal Error", status: 404 };
+    console.log("error", err);
+    if (err.code == 11000) {
+      return { error: `O ${Object.keys(err.keyValue)[0]} ja existe`, status: 500 }
+    }
+    return { error: "Server Internal Error", status: 500 };
   }
 }
 
-async function patchUser(
-  id,
-  {
-    username = null,
-    password = null,
-    email = null,
-    user_photo = null,
-    language = null,
-    description = null,
-  }
-) {
+async function patchUser(id, {
+  username = null,
+  password = null,
+  email = null,
+  user_photo = null,
+  language = null,
+  description = null,
+}) {
   try {
-    const updateFields = {};
-    if (username !== null) updateFields.username = username;
-    if (password !== null) updateFields.password = password;
-    if (email !== null) updateFields.email = email;
-    if (user_photo !== null) updateFields.user_photo = user_photo;
-    if (language !== null) updateFields.language = language;
-    if (description !== null) updateFields.description = description;
+    let currentUser = await User.findById(id);
+    let oldImageKey = currentUser.user_photo;
 
-    var currentUser = await User.findByIdAndUpdate(id, updateFields, {
-      new: true,
-    });
-    return currentUser ? currentUser : { error: "User not found", status: 404 };
+    if (oldImageKey) {
+      const deleteParams = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: oldImageKey,
+      };
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+    }
+
+
+    if (username !== null) currentUser.username = username;
+    if (password !== null) currentUser.password = password;
+    if (email !== null) {
+      currentUser.email = email;
+      currentUser.emailVerified = false;
+    }
+    if (user_photo !== null) currentUser.user_photo = user_photo;
+    if (language !== null) currentUser.language = language;
+    if (description !== null) currentUser.description = description;
+
+    currentUser.save();
+    return currentUser;
+
   } catch (err) {
     console.log("erro", err);
     return { error: "Server Internal Error", status: 404 };
@@ -148,7 +107,21 @@ async function patchUser(
 
 async function deleteUser(id) {
   try {
-    return await User.findByIdAndDelete(id);
+    let deletedUser = await User.findByIdAndDelete(id);
+
+    if (deletedUser.user_photo) {
+      const key = deletedUser.user_photo.split(".com/")[1];
+
+      const deleteParams = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: key,
+      };
+
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+    }
+
+
+    return deletedUser;
   } catch (err) {
     console.log("erro", err);
     return { error: "Server Internal Error", status: 500 };
@@ -162,7 +135,6 @@ module.exports = {
   getPasswordByEmail,
   getUserByEmail,
   createUser,
-  putUser,
   patchUser,
   deleteUser,
 };

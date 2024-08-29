@@ -1,6 +1,7 @@
 const express = require("express");
 const routes = express.Router();
 
+
 //Middlewares
 const authenticateJWT = require("../middlewares/auth");
 const validate = require("../middlewares/handleValidation");
@@ -8,6 +9,7 @@ const {
   createUserValidation,
   updateUserValidation,
 } = require("../middlewares/userValidation");
+const { imageUpload } = require("../middlewares/imageUpload");
 
 //Controllers
 const { user_controller } = require("../config/database");
@@ -36,21 +38,12 @@ routes.post("/user", createUserValidation(), validate, async (req, res) => {
   else res.send(result);
 });
 
-routes.put("/user/:id", async (req, res) => {
-  const result = await user_controller.putUser(req.params.id, req.body);
+routes.patch("/user/:id", updateUserValidation(), validate, imageUpload.single('imageUrl'), async (req, res) => {
+  req.body.user_photo = req.file?.location || "";
+  const result = await user_controller.patchUser(req.params.id, req.body);
   if (result.error) res.status(result.status).json(result.error);
   else res.send(result);
-});
-
-routes.patch(
-  "/user/:id",
-  updateUserValidation(),
-  validate,
-  async (req, res) => {
-    const result = await user_controller.patchUser(req.params.id, req.body);
-    if (result.error) res.status(result.status).json(result.error);
-    else res.send(result);
-  }
+}
 );
 
 routes.delete("/user/:id", async (req, res) => {
