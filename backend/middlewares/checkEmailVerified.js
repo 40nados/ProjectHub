@@ -12,14 +12,12 @@ const checkEmailVerified = async (req, res, next) => {
         }
 
         if (user.emailVerified === false) {
-            return res
-                .status(200)
-                .json({ message: 'Você precisa verificar seu email para prosseguir!' });
+            return res.status(200).json({ message: 'You need to verify you email to proceed!' });
         }
 
         next();
     } catch (error) {
-        return res.status(500).json({ message: 'Server Error' });
+        return res.status(500).json({ errors: 'Server Error' });
     }
 };
 

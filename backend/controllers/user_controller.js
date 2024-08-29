@@ -57,7 +57,7 @@ async function createUser({ username, password, email, user_photo, language, des
     } catch (err) {
         console.log('error', err);
         if (err.code == 11000) {
-            return { error: `O ${Object.keys(err.keyValue)[0]} ja existe`, status: 500 };
+            return { error: `${Object.keys(err.keyValue)[0]} alredy exist`, status: 500 };
         }
         return { error: 'Server Internal Error', status: 500 };
     }
