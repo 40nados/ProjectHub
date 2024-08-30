@@ -21,8 +21,8 @@ const authenticateJWT = require('./middlewares/auth');
 const { loginUserValidation, createUserValidation } = require('./middlewares/userValidation');
 const validate = require('./middlewares/handleValidation');
 
-const http = require('http');
-const socketIo = require('socket.io');
+// const http = require('http');
+// const socketIo = require('socket.io');
 
 //Servers Configs
 const app = express();
@@ -223,15 +223,4 @@ db.connectToDatabase()
         console.log(`Erro ao conectar ao banco de dados: ${erro}`);
     });
 
-/*const server = app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
-});
-
-const server = app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
-});
-*/
-
 module.exports = { app };
-
-// Testando Pull Request on GitHub Versão 4 ------
