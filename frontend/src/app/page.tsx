@@ -2,10 +2,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { FaGithub } from 'react-icons/fa';
+import React from 'react';
+import Lottie from 'lottie-react';
+import animationData from '../../public/animation/Apresentation.json'; // Ajuste o caminho conforme necessário
 
 export default function Home() {
     const [text, setText] = useState('');
-    const textRef = useRef(null);
 
     const fullText =
         'This website is a project co-work feito com next estilo rede social que pretende trabalho estudso react tecnologia wesley e pablo. E é por isso que. Crie agora mesmo sua conta e explore, divulgue projetos, entre cm ontato conosco e etc';
@@ -30,19 +32,31 @@ export default function Home() {
                     'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(31,11,205,0.2) 50%, rgba(36,91,233,0.35) 100%)',
             }}
         >
-            <div className="flex flex-col justify-middle align-middle text-left mt-20">
-                <h1 className="text-white text-9xl font-inter font-semibold">
-                    Project <span className="text-customBlue">Hub</span>
-                </h1>
-                <p className="text-white text-3xl">A project for projects</p>
+            <div className="flex justify-middle align-middle text-left mt-16">
+                <div className="flex flex-col">
+                    <h1 className="text-white text-9xl font-inter font-semibold">
+                        &lt;Project <span className="text-customBlue">Hub/&gt;</span>
+                    </h1>
+                    <p className="text-white text-3xl">A project for projects</p>
+                    <div className="font-courier-prime text-white typing-container flex justify-between mt-40">
+                        <p className="typing-text italic leading-7">{text}</p>
+                        <span className="caret"></span>
+                    </div>
+                </div>
+                <div className="flex flex-col justify-center align-middle items-center ml-40">
+                    <Lottie
+                        animationData={animationData}
+                        loop={true}
+                        style={{ width: 400, height: 400 }}
+                    />
+                    <Button>TESTE</Button>
+                    <button className="bg-[#10ff07] hover:bg-[#ff5a5a] text-white p-8 w-100">
+                        Teste
+                    </button>
+                    <p className="text-white mt-4">Don't have any account yet? Register here.</p>
+                </div>
             </div>
-            <div className="font-courier-prime text-white mt-32 typing-container">
-                <p
-                    className="typing-text italic leading-7"
-                    dangerouslySetInnerHTML={{ __html: text }}
-                ></p>
-                <span className="caret"></span>
-            </div>
+
             <div className="absolute bottom-4 left-4 flex align-middle justify-center items-center">
                 <a
                     href="#todo"
