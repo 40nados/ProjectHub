@@ -33,15 +33,22 @@ export default function Home() {
 
     return (
         <main
-            className="flex min-h-screen flex-col p-10 bg-[#121212]"
+            className="flex min-h-screen flex-col p-10 bg-[#121212] relative z-1 overflow-hidden"
             style={{
                 backgroundImage:
                     'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(31,11,205,0.2) 50%, rgba(36,91,233,0.35) 100%)',
             }}
         >
+            <div className="risco risco-1"> </div>
+            <div className="risco risco-2"> </div>
+            <div className="risco risco-3"> </div>
+            <div className="risco risco-4"> </div>
+            <div className="risco risco-5"> </div>
+            <div className="risco risco-6"> </div>
+            <div className="risco risco-7"> </div>
             <div className="flex justify-middle align-middle text-left mt-16">
                 <div className="flex flex-col">
-                    <h1 className="text-white text-9xl font-inter font-semibold">
+                    <h1 className="text-white text-9xl font-inter font-semibold relative z-1">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
                     </h1>
                     <p className="text-white text-3xl">A project for projects</p>

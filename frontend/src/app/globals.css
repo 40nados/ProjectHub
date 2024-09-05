@@ -70,8 +70,6 @@
 }
 
 /* ANIMAÇÃO PARA DIGITAÇÃO DA TELA DE APRESENTAÇÃO DO SITE */
-/* styles/globals.css */
-/* styles/globals.css */
 .typing-container {
     max-width: 800px; /* máximo de largua */
     white-space: pre-wrap;
@@ -80,8 +78,8 @@
 
 .typing-text {
     display: inline;
-    white-space: pre-wrap; /* Mantém o texto formatado conforme os quebras de linha */
-    overflow: hidden; /* Esconde o texto que ultrapassa o limite do container */
+    white-space: pre-wrap;
+    overflow: hidden;
     position: relative;
     line-height: 1.5em;
 }
@@ -114,3 +112,105 @@
 }
 
 /* ^^ ANIMAÇÃO PARA DIGITAÇÃO DA TELA DE APRESENTAÇÃO DO SITE ^^ */
+
+/* Riscos Tela inicial */
+/* Estilo base para todos os riscos */
+.risco {
+    position: absolute;
+    opacity: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #245be9, transparent);
+    z-index: 0;
+    animation: moverRisco 10s ease-in-out alternate infinite;
+}
+
+/*@keyframes moverRisco {
+    0% {
+        transform: translateY(-10px) translateX (-10px) rotate(-10deg);
+    }
+    25% {
+        transform: translateY(-20px) translateX(-20px) rotate(-10deg);
+    }
+    50% {
+        transform: translateY(-25px) translateX(-25px) rotate(-11deg);
+    }
+    75% {
+        transform: translateY(-30px) translateX(-30px) rotate(-11deg);
+    }
+    100% {
+        transform: translateY(-35px) translateX(-35px) rotate(-11deg);
+    }
+}*/
+
+/*@keyframes moverRisco {
+    0% {
+        transform: translateY(-100vh) rotate(0deg); 
+        opacity: 1; 
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg); 
+        opacity: 0;
+    }
+}*/
+
+@keyframes moverRisco {
+    0% {
+        transform: translate(-80vw, -80vh) rotate(15deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(50vw, 50vh) rotate(15deg);
+        opacity: 0;
+    }
+}
+/* Riscos com diferentes tamanhos, posições e inclinações */
+.risco-1 {
+    top: 5%;
+    left: 0;
+    width: 70%;
+    transform: rotate(-15deg);
+}
+
+.risco-2 {
+    top: 33%;
+    left: 10%;
+    width: 40%;
+    transform: rotate(345deg);
+}
+
+.risco-3 {
+    top: 60%;
+    left: 0;
+    width: 60%;
+    transform: rotate(345deg);
+}
+
+.risco-4 {
+    top: 60%;
+    left: 50%;
+    width: 30%;
+    transform: rotate(345deg);
+}
+
+.risco-5 {
+    top: 85%;
+    left: 20%;
+    width: 30%;
+    transform: rotate(345deg);
+}
+
+.risco-6 {
+    top: 10%;
+    left: 70%;
+    width: 30%;
+    transform: rotate(-15deg);
+}
+
+.risco-7 {
+    top: 80%;
+    left: 80%;
+    width: 30%;
+    transform: rotate(-15deg);
+}
+
+/*^^ Riscos Tela inicial ^^*/
