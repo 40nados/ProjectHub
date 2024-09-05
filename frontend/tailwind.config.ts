@@ -19,7 +19,7 @@ const config = {
         },
         extend: {
             fontFamily: {
-                'courier-prime': ['Courier Prime', 'monospace'],
+                'courier-prime': ['Fira Code', 'monospace'],
             },
             colors: {
                 customBlue: '#245BE9',

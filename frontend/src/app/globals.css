@@ -73,9 +73,9 @@
 /* styles/globals.css */
 /* styles/globals.css */
 .typing-container {
-    max-width: 600px; /* Ajuste a largura máxima conforme necessário */
-    white-space: pre-wrap; /* Permite quebras de linha no texto */
-    overflow: hidden; /* Esconde qualquer parte do texto que ultrapassa o limite do container */
+    max-width: 800px; /* máximo de largua */
+    white-space: pre-wrap;
+    overflow: hidden;
 }
 
 .typing-text {
@@ -83,6 +83,7 @@
     white-space: pre-wrap; /* Mantém o texto formatado conforme os quebras de linha */
     overflow: hidden; /* Esconde o texto que ultrapassa o limite do container */
     position: relative;
+    line-height: 1.5em;
 }
 
 .typing-text::after {

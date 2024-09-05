@@ -1,18 +1,23 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { FaGithub } from 'react-icons/fa';
+//React & Next
 import React from 'react';
-import Lottie from 'lottie-react';
-import animationData from '../../public/animation/Apresentation.json';
+import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
+
+//Components
+import { Button } from '@/components/ui/button';
+
+//Customs - Icons/Animations
+import { FaGithub } from 'react-icons/fa';
 import { FaArrowCircleRight } from 'react-icons/fa';
+import animationData from '../../public/animation/Apresentation.json';
+import Lottie from 'lottie-react';
 
 export default function Home() {
     const [text, setText] = useState('');
 
     const fullText =
-        'This website is a project co-work feito blablablbal com next estilo rede social que pretende trabalho estudso react tecnologia wesley e pablo. E é por isso que. bla bla bla Crie agora mesmo sua conta e explore, divulgue projetos, entre cm ontato conosco e etc';
+        '<Project HUB basically brings together individual and collaborative projects in one place. It offers the possibility to post projects, create your own account, comment, share and even chat with other people via integrated chat for direct contact. The principle of this project was to improve and learn new things, seeking to be a good FullStack developer./>';
 
     useEffect(() => {
         let index = 0;
@@ -41,7 +46,7 @@ export default function Home() {
                     </h1>
                     <p className="text-white text-3xl">A project for projects</p>
                     <div className="font-courier-prime text-white typing-container flex justify-between mt-40">
-                        <p className="typing-text italic leading-7 font-bold">{text}</p>
+                        <p className="typing-text leading-7 text-2xl">{text}</p>
                         <span className="caret"></span>
                     </div>
                 </div>
