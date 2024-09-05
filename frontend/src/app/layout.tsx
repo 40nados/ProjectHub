@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: 'Project Hub',
     description: 'A project for projects',
     icons: {
-        icon: '/icon site/favicon-32x32.png',
+        icon: '/Icon site/favicon-32x32.png',
     },
 };
 

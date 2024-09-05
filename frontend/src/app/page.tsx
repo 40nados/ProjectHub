@@ -1,16 +1,18 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { FaGithub } from 'react-icons/fa';
 import React from 'react';
 import Lottie from 'lottie-react';
-import animationData from '../../public/animation/Apresentation.json'; // Ajuste o caminho conforme necessário
+import animationData from '../../public/animation/Apresentation.json';
+import { FaArrowCircleRight } from 'react-icons/fa';
 
 export default function Home() {
     const [text, setText] = useState('');
 
     const fullText =
-        'This website is a project co-work feito com next estilo rede social que pretende trabalho estudso react tecnologia wesley e pablo. E é por isso que. Crie agora mesmo sua conta e explore, divulgue projetos, entre cm ontato conosco e etc';
+        'This website is a project co-work feito blablablbal com next estilo rede social que pretende trabalho estudso react tecnologia wesley e pablo. E é por isso que. bla bla bla Crie agora mesmo sua conta e explore, divulgue projetos, entre cm ontato conosco e etc';
 
     useEffect(() => {
         let index = 0;
@@ -39,7 +41,7 @@ export default function Home() {
                     </h1>
                     <p className="text-white text-3xl">A project for projects</p>
                     <div className="font-courier-prime text-white typing-container flex justify-between mt-40">
-                        <p className="typing-text italic leading-7">{text}</p>
+                        <p className="typing-text italic leading-7 font-bold">{text}</p>
                         <span className="caret"></span>
                     </div>
                 </div>
@@ -47,19 +49,33 @@ export default function Home() {
                     <Lottie
                         animationData={animationData}
                         loop={true}
-                        style={{ width: 400, height: 400 }}
+                        style={{ width: 550, height: 550 }}
                     />
-                    <Button>TESTE</Button>
-                    <button className="bg-[#10ff07] hover:bg-[#ff5a5a] text-white p-8 w-100">
-                        Teste
-                    </button>
-                    <p className="text-white mt-4">Don't have any account yet? Register here.</p>
+                    <Link href="/login">
+                        <Button
+                            className="bg-white p-10 w-64 hover:scale-110 transition-all duration-700 justify-evenly text-xl group"
+                            variant="secondary"
+                        >
+                            Access{' '}
+                            <FaArrowCircleRight
+                                size={35}
+                                className="transition-transform duration-700 group-hover:translate-x-3"
+                            />
+                        </Button>
+                    </Link>
+                    <p className="text-white mt-4">
+                        Don't have any account yet?{' '}
+                        <Link href="/register" className="text-customBlue underline">
+                            Register here.
+                        </Link>
+                    </p>
                 </div>
             </div>
 
             <div className="absolute bottom-4 left-4 flex align-middle justify-center items-center">
                 <a
-                    href="#todo"
+                    href="https://github.com/40nados/ProjectHub"
+                    target="_blanck"
                     className="text-white hover:text-customBlue hover:scale-110 transition-all duration-700"
                 >
                     <FaGithub size={40} />
@@ -68,14 +84,16 @@ export default function Home() {
                     Made by:{' '}
                     <a
                         className="text-customBlue hover:text-blue-800 transition-colors duration-300 p-2"
-                        href="#todo"
+                        href="https://github.com/TitanCodeXD"
+                        target="_blanck"
                     >
                         Wesley Santos
                     </a>{' '}
                     &{' '}
                     <a
                         className="text-customBlue hover:text-blue-800 transition-colors duration-300 p-2"
-                        href="#todo"
+                        href="https://github.com/BourbonJones"
+                        target="_blanck"
                     >
                         Pablo Delgado
                     </a>
