@@ -51,7 +51,7 @@ export default function Home() {
                     <h1 className="text-white text-9xl font-inter font-semibold relative z-1">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
                     </h1>
-                    <p className="text-white text-3xl">A project for projects</p>
+                    <p className="text-white text-3xl mt-3">A project for projects</p>
                     <div className="font-courier-prime text-white typing-container flex justify-between mt-40">
                         <p className="typing-text leading-7 text-2xl">{text}</p>
                         <span className="caret"></span>
@@ -77,7 +77,7 @@ export default function Home() {
                     </Link>
                     <p className="text-white mt-4">
                         Don't have any account yet?{' '}
-                        <Link href="/register" className="text-customBlue underline">
+                        <Link href="/register" className="text-indigo-200 underline">
                             Register here.
                         </Link>
                     </p>
