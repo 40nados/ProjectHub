@@ -46,31 +46,30 @@ export default function Home() {
             <div className="risco risco-5"> </div>
             <div className="risco risco-6"> </div>
             <div className="risco risco-7"> </div>
-            <div className="flex justify-middle align-middle text-left mt-16">
+            <div className="flex justify-around align-middle text-left mt-16 h-[70vh]">
                 <div className="flex flex-col">
-                    <h1 className="text-white text-9xl font-inter font-semibold relative z-1">
+                    <h1 className="text-white text-[5vw] font-inter font-semibold relative z-1">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
                     </h1>
-                    <p className="text-white text-3xl mt-3">A project for projects</p>
+                    <p className="text-white text-[2vw]">A project for projects</p>
                     <div className="font-courier-prime text-white typing-container flex justify-between mt-40">
-                        <p className="typing-text leading-7 text-2xl">{text}</p>
-                        <span className="caret"></span>
+                        <p className="typing-text leading-7 text-[1vw]">{text}</p>
                     </div>
                 </div>
-                <div className="flex flex-col justify-center align-middle items-center ml-40">
+                <div className="flex flex-col justify-center align-middle items-center">
                     <Lottie
                         animationData={animationData}
                         loop={true}
-                        style={{ width: 550, height: 550 }}
+                        style={{ width: '50vw', height: '50vh' }}
                     />
                     <Link href="/login">
                         <Button
-                            className="bg-white p-10 w-64 hover:scale-110 transition-all duration-700 justify-evenly text-xl group"
-                            variant="secondary"
+                            className="bg-white w-60 h-20 hover:scale-110 transition-all duration-700 justify-evenly text-xl group"
+                            variant="custom"
                         >
                             Access{' '}
                             <FaArrowCircleRight
-                                size={35}
+                                size={25}
                                 className="transition-transform duration-700 group-hover:translate-x-3"
                             />
                         </Button>
