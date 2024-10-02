@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
 //Components
-import { Button } from '@/components/ui/button';
+import { Button } from '@components/ui/button';
 
 //Customs - Icons/Animations
 import { FaGithub } from 'react-icons/fa';
