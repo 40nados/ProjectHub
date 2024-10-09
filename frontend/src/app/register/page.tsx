@@ -64,7 +64,7 @@ const register = () => {
                         </div>
 
                         <div className="w-[98%] flex flex-col">
-                            <label className="mt-4">Lenguage</label>
+                            <label className="mt-4">Language</label>
                             <input
                                 className="bg-[var(--secondary)] rounded-lg p-2 mt-2"
                                 placeholder="Set your native lenguage"

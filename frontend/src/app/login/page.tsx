@@ -12,12 +12,12 @@ import { FaLock } from 'react-icons/fa';
 import { GoEyeClosed } from 'react-icons/go';
 import { GoEye } from 'react-icons/go';
 
-//Shadcn
-import { Input } from '@components/ui/input';
-import { Label } from '@/components/ui/label';
+//Shadcn and Animations
 import { Button } from '@/components/ui/button';
 import animationData from '../../../public/animation/Animation - Login.json';
 import Lottie from 'lottie-react';
+
+//Components
 import Load from '../../components/project/loading/loading';
 
 const login = () => {
@@ -27,7 +27,7 @@ const login = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const router = useRouter(); // Hook do next para redirecionamento
+    const router = useRouter();
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevState) => !prevState);
@@ -133,7 +133,7 @@ const login = () => {
                                 {/* Alterna entre olho aberto e fechado */}
                             </span>
                         </div>
-                        {error && <p className="text-red-500 mt-4">{error}</p>} {/* Exibe erro */}
+                        {error && <p className="text-red-500 mt-4">{error}</p>}
                         {loading ? (
                             <Button
                                 className="bg-[var(--foreground)] text-[var(--background)]  mt-4 mb-4 text-xl w-1/2 opacity-50 cursor-wait"
