@@ -22,7 +22,7 @@ import Load from '../../components/project/loading/loading';
 
 const login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [user, setUser] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -37,13 +37,33 @@ const login = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        console.log(user, password);
+        console.log(username, password);
 
         try {
-            //setLoading(false);
+            const response = await fetch('http://localhost:8081/login', {
+                //MUDAR O LINK QUANDO BACKEND FOR PRO AR :)
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                router.push('/home');
+            } else {
+                setError(data.error || 'Failed to login');
+            }
         } catch (error) {
             setLoading(false);
             setError('An unexpected error occurred. Please try again later.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -86,8 +106,8 @@ const login = () => {
                             <input
                                 className="bg-[var(--secondary)] rounded-lg p-2 mt-2 pl-8"
                                 placeholder="Email or username"
-                                value={user}
-                                onChange={(e) => setUser(e.target.value)}
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                                 disabled={loading}
                             ></input>
                         </div>
@@ -134,7 +154,7 @@ const login = () => {
                         )}
                     </form>
                     <p className="text-white mt-4">
-                        Don't have any account yet?
+                        Don't have any account yet?{' '}
                         <Link href="/register" className="text-indigo-200 underline">
                             Register here.
                         </Link>
