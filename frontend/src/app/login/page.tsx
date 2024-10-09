@@ -3,6 +3,7 @@
 import React from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 //Icons
 import { FaArrowLeft } from 'react-icons/fa';
@@ -17,16 +18,33 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import animationData from '../../../public/animation/Animation - Login.json';
 import Lottie from 'lottie-react';
+import Load from '../../components/project/loading/loading';
 
 const login = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [user, setUser] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    const router = useRouter(); // Hook do next para redirecionamento
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevState) => !prevState);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null);
+        console.log(user, password);
+
+        try {
+            //setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            setError('An unexpected error occurred. Please try again later.');
+        }
     };
 
     return (
@@ -68,9 +86,11 @@ const login = () => {
                             <input
                                 className="bg-[var(--secondary)] rounded-lg p-2 mt-2 pl-8"
                                 placeholder="Email or username"
+                                value={user}
+                                onChange={(e) => setUser(e.target.value)}
+                                disabled={loading}
                             ></input>
                         </div>
-
                         <div className="w-[98%] flex flex-col relative">
                             <label className="mt-4">Password</label>
                             <FaLock
@@ -80,7 +100,10 @@ const login = () => {
                             <input
                                 className="bg-[var(--secondary)] rounded-lg p-2 mt-2 pl-8"
                                 type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Password"
+                                disabled={loading}
                             ></input>
                             <span
                                 className="absolute top-14 left-[91%]"
@@ -90,17 +113,28 @@ const login = () => {
                                 {/* Alterna entre olho aberto e fechado */}
                             </span>
                         </div>
-
-                        <Button
-                            className="bg-[var(--foreground)] text-[var(--background)] hover:scale-105 mt-4 mb-4 text-xl w-1/2 transition duration-700"
-                            variant="custom"
-                            type="submit"
-                        >
-                            Login
-                        </Button>
+                        {error && <p className="text-red-500 mt-4">{error}</p>} {/* Exibe erro */}
+                        {loading ? (
+                            <Button
+                                className="bg-[var(--foreground)] text-[var(--background)]  mt-4 mb-4 text-xl w-1/2 opacity-50 cursor-wait"
+                                variant="custom"
+                                type="submit"
+                                //disabled={loading}
+                            >
+                                Aguarde... <Load height="25px" width="25px" />
+                            </Button>
+                        ) : (
+                            <Button
+                                className="bg-[var(--foreground)] text-[var(--background)] hover:scale-105 mt-4 mb-4 text-xl w-1/2 transition duration-700"
+                                variant="custom"
+                                type="submit"
+                            >
+                                Login
+                            </Button>
+                        )}
                     </form>
                     <p className="text-white mt-4">
-                        Don't have any account yet?{' '}
+                        Don't have any account yet?
                         <Link href="/register" className="text-indigo-200 underline">
                             Register here.
                         </Link>
