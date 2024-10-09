@@ -112,6 +112,11 @@
     }
 }
 
+h1,
+p {
+    color: white;
+}
+
 /* ^^ ANIMAÇÃO PARA DIGITAÇÃO DA TELA DE APRESENTAÇÃO DO SITE ^^ */
 
 /* Riscos Tela inicial */

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
 //Components
-import { Button } from '@/components/ui/button';
+import { Button } from '@components/ui/button';
 
 //Customs - Icons/Animations
 import { FaGithub } from 'react-icons/fa';
@@ -14,22 +14,22 @@ import animationData from '../../public/animation/Apresentation.json';
 import Lottie from 'lottie-react';
 
 export default function Home() {
-  const [text, setText] = useState('');
+    const [text, setText] = useState('');
 
-  const fullText =
-    '<Project HUB basically brings together individual and collaborative projects in one place. It offers the possibility to post projects, create your own account, comment, share and even chat with other people via integrated chat for direct contact. The principle of this project was to improve and learn new things, seeking to be a good FullStack developer./>';
+    const fullText =
+        '<Project HUB basically brings together individual and collaborative projects in one place. It offers the possibility to post projects, create your own account, comment, share and even chat with other people via integrated chat for direct contact. The principle of this project was to improve and learn new things, seeking to be a good FullStack developer./>';
 
-  useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      setText(fullText.substring(0, index + 1));
-      index += 1;
-      if (index >= fullText.length) {
-        clearInterval(interval);
-      }
-    }, 50); // Velocidade
-    return () => clearInterval(interval);
-  }, [fullText]);
+    useEffect(() => {
+        let index = 0;
+        const interval = setInterval(() => {
+            setText(fullText.substring(0, index + 1));
+            index += 1;
+            if (index >= fullText.length) {
+                clearInterval(interval);
+            }
+        }, 50); // Velocidade
+        return () => clearInterval(interval);
+    }, [fullText]);
 
     return (
         <main
@@ -53,7 +53,7 @@ export default function Home() {
                     </h1>
                     <p className="text-white text-[2vw]">A project for projects</p>
                     <div className="font-courier-prime text-white typing-container flex justify-between mt-40">
-                        <p className="typing-text leading-7 text-[1vw]">{text}</p>
+                        <p className="typing-text leading-7 text-[5vw]">{text}</p>
                     </div>
                 </div>
                 <div className="flex flex-col justify-center align-middle items-center">
