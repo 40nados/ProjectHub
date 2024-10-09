@@ -25,6 +25,10 @@ const login = () => {
         setShowPassword((prevState) => !prevState);
     };
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    };
+
     return (
         <main className="bg-background min-h-screen overflow-hidden text-foreground">
             <div className="flex justify-around align-middle text-left mt-16 h-[70vh]">
@@ -44,7 +48,7 @@ const login = () => {
                         <Lottie
                             animationData={animationData}
                             loop={true}
-                            initialSegment={[20, 300]}
+                            initialSegment={[40, 250]}
                             style={{ width: '50vw', height: '50vh' }}
                         />
                     </div>
@@ -52,9 +56,12 @@ const login = () => {
                 <div className="flex flex-col items-center w-1/2 justify-center">
                     <h1 className="text-[var(--foreground)] text-[2vw]">Log in your account!</h1>
                     <p className="text-[var(--secondary-foreground)] text-[1vw] mb-10">
-                        It's just few minutes and free!
+                        Welcome back!
                     </p>
-                    <form className="bg-[var(--primary)] w-1/2 flex flex-col items-center px-4 rounded-3xl justify-around ">
+                    <form
+                        className="bg-[var(--primary)] w-1/2 flex flex-col items-center px-4 rounded-3xl justify-around "
+                        onSubmit={handleSubmit}
+                    >
                         <div className="w-[98%] flex flex-col relative">
                             <label className="mt-4">Email/Username</label>
                             <MdEmail className="absolute top-14 left-1" size={25} />
@@ -85,8 +92,9 @@ const login = () => {
                         </div>
 
                         <Button
-                            className="bg-[var(--foreground)] text-[var(--background)] hover:scale-110 mt-4 mb-4 text-xl w-1/2"
+                            className="bg-[var(--foreground)] text-[var(--background)] hover:scale-105 mt-4 mb-4 text-xl w-1/2 transition duration-700"
                             variant="custom"
+                            type="submit"
                         >
                             Login
                         </Button>
