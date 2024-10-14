@@ -4,6 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { api } from '@/lib/api';
 
 //Icons
 import { FaArrowLeft } from 'react-icons/fa';
@@ -11,6 +12,7 @@ import { MdEmail } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa';
 import { GoEyeClosed } from 'react-icons/go';
 import { GoEye } from 'react-icons/go';
+import Cookies from 'js-cookie';
 
 //Shadcn and Animations
 import { Button } from '@/components/ui/button';
@@ -37,27 +39,16 @@ const login = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        console.log(username, password);
-
+        
         try {
-            const response = await fetch('http://localhost:8081/login', {
-                //MUDAR O LINK QUANDO BACKEND FOR PRO AR :)
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    password,
-                }),
-            });
+            const response = await api('POST', '/login', {username, password});
 
-            const data = await response.json();
-
-            if (response.ok) {
+            if (response.id && response.accessToken) {
+                Cookies.set('accessToken', response.accessToken);
+                Cookies.set('userId', response.id);
                 router.push('/home');
             } else {
-                setError(data.error || 'Failed to login');
+                setError(response.error || 'Failed to login');
             }
         } catch (error) {
             setLoading(false);
@@ -69,8 +60,8 @@ const login = () => {
 
     return (
         <main className="bg-background min-h-screen overflow-hidden text-foreground">
-            <div className="flex justify-around align-middle text-left mt-16 h-[70vh]">
-                <div className="flex flex-col items-center">
+            <article className="flex justify-around align-middle text-left mt-16 h-[70vh]">
+                <header className="flex flex-col items-center">
                     <Link href="/" className="absolute left-4 top-4">
                         {' '}
                         <FaArrowLeft
@@ -90,8 +81,8 @@ const login = () => {
                             style={{ width: '50vw', height: '50vh' }}
                         />
                     </div>
-                </div>
-                <div className="flex flex-col items-center w-1/2 justify-center">
+                </header>
+                <section className="flex flex-col items-center w-1/2 justify-center">
                     <h1 className="text-[var(--foreground)] text-[2vw]">Log in your account!</h1>
                     <p className="text-[var(--secondary-foreground)] text-[1vw] mb-10">
                         Welcome back!
@@ -159,8 +150,8 @@ const login = () => {
                             Register here.
                         </Link>
                     </p>
-                </div>
-            </div>
+                </section>
+            </article>
         </main>
     );
 };

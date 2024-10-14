@@ -4,5 +4,8 @@
   },
   "scripts": {
     "dev": "concurrently --kill-others-on-fail -n \"BACKEND,FRONTEND\" -c \"yellow,blue\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6"
   }
 }
