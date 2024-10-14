@@ -49,9 +49,9 @@ async function getUserByEmail(email) {
     }
 }
 
-async function createUser({ username, password, email, user_photo, language, description }) {
+async function createUser({ username, password, email, user_photo, language, description, color }) {
     try {
-        let newUser = new User({ username, password, email, user_photo, language, description });
+        let newUser = new User({ username, password, email, user_photo, language, description, color });
         await newUser.save();
         return newUser;
     } catch (err) {
@@ -72,6 +72,7 @@ async function patchUser(
         user_photo = null,
         language = null,
         description = null,
+        color = null
     }
 ) {
     try {
@@ -95,6 +96,7 @@ async function patchUser(
         if (user_photo !== null) currentUser.user_photo = user_photo;
         if (language !== null) currentUser.language = language;
         if (description !== null) currentUser.description = description;
+        if (color !== null) currentUser.color = color
 
         currentUser.save();
         return currentUser;

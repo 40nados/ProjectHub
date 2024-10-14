@@ -55,6 +55,7 @@ const login = () => {
             const data = await response.json();
 
             if (response.ok) {
+                localStorage.setItem('token', data.accessToken);
                 router.push('/home');
             } else {
                 setError(data.error || 'Failed to login');
@@ -69,16 +70,17 @@ const login = () => {
 
     return (
         <main className="bg-background min-h-screen overflow-hidden text-foreground">
-            <div className="flex justify-around align-middle text-left mt-16 h-[70vh]">
-                <div className="flex flex-col items-center">
-                    <Link href="/" className="absolute left-4 top-4">
-                        {' '}
-                        <FaArrowLeft
-                            color="white"
-                            size={35}
-                            className="transition-transform duration-700 hover:-translate-x-2"
-                        />
-                    </Link>
+            <div className="flex justify-around align-middle text-left mt-16 h-auto">
+                <Link href="/" className="absolute left-4 top-4">
+                    {' '}
+                    <FaArrowLeft
+                        color="white"
+                        size={35}
+                        className="transition-transform duration-700 hover:-translate-x-2"
+                    />
+                </Link>
+
+                <div className="flex flex-col items-center rounded-lg">
                     <h1 className="text-foreground text-[5vw] font-inter font-semibold relative z-1 mt-10">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
                     </h1>
@@ -91,7 +93,8 @@ const login = () => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-center w-1/2 justify-center">
+
+                <div className="flex flex-col items-center w-1/2 justify-center h-auto">
                     <h1 className="text-[var(--foreground)] text-[2vw]">Log in your account!</h1>
                     <p className="text-[var(--secondary-foreground)] text-[1vw] mb-10">
                         Welcome back!
