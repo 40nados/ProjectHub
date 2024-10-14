@@ -67,7 +67,7 @@ const register = () => {
                             <label className="mt-4">Language</label>
                             <input
                                 className="bg-[var(--secondary)] rounded-lg p-2 mt-2"
-                                placeholder="Set your native lenguage"
+                                placeholder="Set your native language"
                             ></input>
                         </div>
 
