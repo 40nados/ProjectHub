@@ -43,9 +43,16 @@ const login = () => {
         try {
             const response = await api('POST', '/login', {username, password});
 
+<<<<<<< HEAD
             if (response.id && response.accessToken) {
                 Cookies.set('accessToken', response.accessToken);
                 Cookies.set('userId', response.id);
+=======
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('token', data.accessToken);
+>>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                 router.push('/home');
             } else {
                 setError(response.error || 'Failed to login');
@@ -60,6 +67,7 @@ const login = () => {
 
     return (
         <main className="bg-background min-h-screen overflow-hidden text-foreground">
+<<<<<<< HEAD
             <article className="flex justify-around align-middle text-left mt-16 h-[70vh]">
                 <header className="flex flex-col items-center">
                     <Link href="/" className="absolute left-4 top-4">
@@ -70,6 +78,19 @@ const login = () => {
                             className="transition-transform duration-700 hover:-translate-x-2"
                         />
                     </Link>
+=======
+            <div className="flex justify-around align-middle text-left mt-16 h-auto">
+                <Link href="/" className="absolute left-4 top-4">
+                    {' '}
+                    <FaArrowLeft
+                        color="white"
+                        size={35}
+                        className="transition-transform duration-700 hover:-translate-x-2"
+                    />
+                </Link>
+
+                <div className="flex flex-col items-center rounded-lg">
+>>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                     <h1 className="text-foreground text-[5vw] font-inter font-semibold relative z-1 mt-10">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
                     </h1>
@@ -81,8 +102,14 @@ const login = () => {
                             style={{ width: '50vw', height: '50vh' }}
                         />
                     </div>
+<<<<<<< HEAD
                 </header>
                 <section className="flex flex-col items-center w-1/2 justify-center">
+=======
+                </div>
+
+                <div className="flex flex-col items-center w-1/2 justify-center h-auto">
+>>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                     <h1 className="text-[var(--foreground)] text-[2vw]">Log in your account!</h1>
                     <p className="text-[var(--secondary-foreground)] text-[1vw] mb-10">
                         Welcome back!

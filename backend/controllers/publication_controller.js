@@ -258,11 +258,23 @@ const Comment = async (req, res) => {
 const SearchPublications = async (req, res) => {
     const { q } = req.query;
 
-    const publications = await Publication.find({
-        title: new RegExp(q, 'i'),
-    }).exec();
+    try {
+        const publications = await Publication.find({
+            title: new RegExp(q, 'i'),
+        }).exec();
 
-    res.status(200).json(publications);
+        const users = await User.find({
+            username: new RegExp(q, 'i'),
+        }).exec();
+
+        const results = {
+            publications,
+            users,
+        };
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao realizar a pesquisa' });
+    }
 };
 
 module.exports = {
