@@ -46,7 +46,7 @@ export default function Home() {
             <div className="risco risco-5"> </div>
             <div className="risco risco-6"> </div>
             <div className="risco risco-7"> </div>
-            <div className="flex justify-around align-middle text-left mt-16 h-[70vh]">
+            <section className="flex justify-around align-middle text-left mt-16 h-[70vh]">
                 <div className="flex flex-col">
                     <h1 className="text-white text-[5vw] font-inter font-semibold relative z-1">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
@@ -81,9 +81,9 @@ export default function Home() {
                         </Link>
                     </p>
                 </div>
-            </div>
+            </section>
 
-            <div className="absolute bottom-4 left-4 flex align-middle justify-center items-center">
+            <footer role='contentInfo' className="absolute bottom-4 left-4 flex align-middle justify-center items-center">
                 <a
                     href="https://github.com/40nados/ProjectHub"
                     target="_blanck"
@@ -109,7 +109,7 @@ export default function Home() {
                         Pablo Delgado
                     </a>
                 </p>
-            </div>
+            </footer>
         </main>
     );
 }

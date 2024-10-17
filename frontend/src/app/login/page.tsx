@@ -4,6 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { api } from '@/lib/api';
 
 //Icons
 import { FaArrowLeft } from 'react-icons/fa';
@@ -11,6 +12,7 @@ import { MdEmail } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa';
 import { GoEyeClosed } from 'react-icons/go';
 import { GoEye } from 'react-icons/go';
+import Cookies from 'js-cookie';
 
 //Shadcn and Animations
 import { Button } from '@/components/ui/button';
@@ -37,28 +39,23 @@ const login = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        console.log(username, password);
-
+        
         try {
-            const response = await fetch('http://localhost:8081/login', {
-                //MUDAR O LINK QUANDO BACKEND FOR PRO AR :)
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    password,
-                }),
-            });
+            const response = await api('POST', '/login', {username, password});
 
+<<<<<<< HEAD
+            if (response.id && response.accessToken) {
+                Cookies.set('accessToken', response.accessToken);
+                Cookies.set('userId', response.id);
+=======
             const data = await response.json();
 
             if (response.ok) {
                 localStorage.setItem('token', data.accessToken);
+>>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                 router.push('/home');
             } else {
-                setError(data.error || 'Failed to login');
+                setError(response.error || 'Failed to login');
             }
         } catch (error) {
             setLoading(false);
@@ -70,6 +67,18 @@ const login = () => {
 
     return (
         <main className="bg-background min-h-screen overflow-hidden text-foreground">
+<<<<<<< HEAD
+            <article className="flex justify-around align-middle text-left mt-16 h-[70vh]">
+                <header className="flex flex-col items-center">
+                    <Link href="/" className="absolute left-4 top-4">
+                        {' '}
+                        <FaArrowLeft
+                            color="white"
+                            size={35}
+                            className="transition-transform duration-700 hover:-translate-x-2"
+                        />
+                    </Link>
+=======
             <div className="flex justify-around align-middle text-left mt-16 h-auto">
                 <Link href="/" className="absolute left-4 top-4">
                     {' '}
@@ -81,6 +90,7 @@ const login = () => {
                 </Link>
 
                 <div className="flex flex-col items-center rounded-lg">
+>>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                     <h1 className="text-foreground text-[5vw] font-inter font-semibold relative z-1 mt-10">
                         &lt;Project <span className="text-customBlue">Hub/&gt;</span>
                     </h1>
@@ -92,9 +102,14 @@ const login = () => {
                             style={{ width: '50vw', height: '50vh' }}
                         />
                     </div>
+<<<<<<< HEAD
+                </header>
+                <section className="flex flex-col items-center w-1/2 justify-center">
+=======
                 </div>
 
                 <div className="flex flex-col items-center w-1/2 justify-center h-auto">
+>>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                     <h1 className="text-[var(--foreground)] text-[2vw]">Log in your account!</h1>
                     <p className="text-[var(--secondary-foreground)] text-[1vw] mb-10">
                         Welcome back!
@@ -162,8 +177,8 @@ const login = () => {
                             Register here.
                         </Link>
                     </p>
-                </div>
-            </div>
+                </section>
+            </article>
         </main>
     );
 };
