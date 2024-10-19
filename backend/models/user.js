@@ -12,7 +12,9 @@ const user = new mongoose.Schema({
     language: { type: String, default: 'pt' },
     description: { type: String },
     chats: [{ type: String, ref: 'Chat' }],
-    color: {type: String}
+    following: [{ type: String, ref: 'User' }],
+    followers: [{ type: String, ref: 'User' }],
+    color: { type: String },
 });
 
 let User = mongoose.model('User', user);
