@@ -139,19 +139,92 @@ async function deleteUser(id) {
 // Implementndo função de seguidores
 
 //Seguir alguém
-async function followUser(id) {
+async function followUser(req, res) {
+    const { id } = req.params; // ID da pessoa a ser seguida
+    const reqUser = req.body.userId; // ID do usuário que está seguindo
+
     try {
-    } catch (error) {}
+        //Fazendo verificações básicas primeiramente, para evitar erros inesperados com oseguir álguem que não existe ou seguir a si mesmo
+        if (reqUser === id) {
+            return res.status(400).json({ error: 'You cant follow youserf.' });
+        }
+
+        userFollowed = await User.findById(id);
+        if (!userFollowed) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Adicionar o ID da pessoa que está sendo seguida no array 'following' do usuário
+        await User.findByIdAndUpdate(reqUser, { $addToSet: { following: id } }); //addToSet adiciona ao array
+
+        // Adicionar o ID do usuário no array 'followers' da pessoa que está sendo seguida
+        await User.findByIdAndUpdate(id, { $addToSet: { followers: reqUser } });
+
+        res.status(200).json({ message: `Now you are following ${userFollowed.username}.` });
+    } catch (error) {
+        res.status(500).json({ error: 'Error to following user.' });
+    }
 }
 
 //Deixar de Seguir álguem
-async function unfollowUser(id) {}
+async function unfollowUser(req, res) {
+    const { id } = req.params; // ID da pessoa a ser deseguida (isso existe? kkkk fds)
+    const reqUser = req.body.userId; // ID do usuário que vai deixar de seguir
+
+    try {
+        //Fazendo verificações básicas primeiramente, como deixar de seguir a si mesmo (?) ou deixar dew seguir álguem que não existe
+        if (reqUser === id) {
+            return res.status(400).json({ error: 'You cant follow youserf.' });
+        }
+
+        userFollowed = await User.findById(id);
+        if (!userFollowed) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Adicionar o ID da pessoa que está sendo seguida no array 'following' do usuário
+        await User.findByIdAndUpdate(reqUser, { $pull: { following: id } }); //Pull tira
+
+        // Adicionar o ID do usuário no array 'followers' da pessoa que está sendo seguida
+        await User.findByIdAndUpdate(id, { $pull: { followers: reqUser } });
+
+        res.status(200).json({ message: `You ahve unfollowed ${userFollowed.username}.` });
+    } catch (error) {
+        res.status(500).json({ error: 'Error to unfollowing user.' });
+    }
+}
 
 //Ver quem tal pessoa está seguindo
-async function getFollowing(id) {}
+async function getFollowing(req, res) {
+    const reqUser = req.body.userId;
+
+    try {
+        const user = await User.findById(reqUser).populate('following', 'username user_photo'); // Populando apenas username e user_photo, a principio será so esses, ao ver que tal pessoa ta seguindo aparece a foto de cada um, assim como seus respectivos nomes
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        res.status(200).json({ following: user.following });
+    } catch (error) {
+        res.status(500).json({ error: 'Error to get the follwoings.' });
+    }
+}
 
 //Ver quem está seguindo tal pessoa
-async function getFollowers(id) {}
+async function getFollowers(req, res) {
+    const reqUser = req.params.id;
+
+    try {
+        const user = await User.findById(reqUser).populate('followers', 'username user_photo'); // Populando apenas username e user_photo novamente
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        res.status(200).json({ followers: user.followers });
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching followers.' });
+    }
+}
 
 module.exports = {
     listAllUsers,
@@ -162,4 +235,8 @@ module.exports = {
     createUser,
     patchUser,
     deleteUser,
+    followUser,
+    unfollowUser,
+    getFollowing,
+    getFollowers,
 };
