@@ -136,33 +136,37 @@ async function deleteUser(id) {
     }
 }
 
-// Implementndo função de seguidores
+// ---- Implementndo função de seguidores
 
 //Seguir alguém
 async function followUser(req, res) {
     const { id } = req.params; // ID da pessoa a ser seguida
     const reqUser = req.body.userId; // ID do usuário que está seguindo
+    //console.log(`reqUser: ${reqUser}, type: ${typeof reqUser}`);
+    //console.log(`id: ${id}, type: ${typeof id}`);
 
     try {
-        //Fazendo verificações básicas primeiramente, para evitar erros inesperados com oseguir álguem que não existe ou seguir a si mesmo
+        // Verificações básicas para evitar erros internos como seguir a si mesmo ou seguir al´guem que nem existe
         if (reqUser === id) {
-            return res.status(400).json({ error: 'You cant follow youserf.' });
+            return res.status(400).json({ error: 'You cannot follow yourself.' });
         }
 
-        userFollowed = await User.findById(id);
+        // Busca o usuário que está sendo seguido
+        const userFollowed = await User.findById(id);
         if (!userFollowed) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        // Adicionar o ID da pessoa que está sendo seguida no array 'following' do usuário
-        await User.findByIdAndUpdate(reqUser, { $addToSet: { following: id } }); //addToSet adiciona ao array
+        // Adiciona o ID da pessoa que está sendo seguida no array 'following' do usuário
+        await User.findByIdAndUpdate(reqUser, { $addToSet: { following: id } }); //addToSet adiciona um dado no mongo
 
-        // Adicionar o ID do usuário no array 'followers' da pessoa que está sendo seguida
+        // Adiciona o ID do usuário no array 'followers' da pessoa que está sendo seguida
         await User.findByIdAndUpdate(id, { $addToSet: { followers: reqUser } });
 
         res.status(200).json({ message: `Now you are following ${userFollowed.username}.` });
     } catch (error) {
-        res.status(500).json({ error: 'Error to following user.' });
+        console.error(error);
+        res.status(500).json({ error: 'Error following user.' });
     }
 }
 
@@ -188,7 +192,7 @@ async function unfollowUser(req, res) {
         // Adicionar o ID do usuário no array 'followers' da pessoa que está sendo seguida
         await User.findByIdAndUpdate(id, { $pull: { followers: reqUser } });
 
-        res.status(200).json({ message: `You ahve unfollowed ${userFollowed.username}.` });
+        res.status(200).json({ message: `You have unfollowed ${userFollowed.username}.` });
     } catch (error) {
         res.status(500).json({ error: 'Error to unfollowing user.' });
     }
@@ -196,11 +200,16 @@ async function unfollowUser(req, res) {
 
 //Ver quem tal pessoa está seguindo
 async function getFollowing(req, res) {
-    const reqUser = req.body.userId;
+    const reqUser = req.params.id;
 
     try {
+        if (!reqUser) {
+            return res.status(400).json({ error: 'User ID is required.' });
+        }
+
         const user = await User.findById(reqUser).populate('following', 'username user_photo'); // Populando apenas username e user_photo, a principio será so esses, ao ver que tal pessoa ta seguindo aparece a foto de cada um, assim como seus respectivos nomes
         if (!user) {
+            //console.log(reqUser);
             return res.status(404).json({ error: 'User not found.' });
         }
 

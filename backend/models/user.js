@@ -12,8 +12,8 @@ const user = new mongoose.Schema({
     language: { type: String, default: 'pt' },
     description: { type: String },
     chats: [{ type: String, ref: 'Chat' }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: String, ref: 'User' }],
+    followers: [{ type: String, ref: 'User' }],
     color: { type: String },
 });
 
