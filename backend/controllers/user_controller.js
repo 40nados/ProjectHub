@@ -146,24 +146,24 @@ async function followUser(req, res) {
     //console.log(`id: ${id}, type: ${typeof id}`);
 
     try {
-        // Verificações básicas para evitar erros internos como seguir a si mesmo ou seguir al´guem que nem existe
+        // Verificações básicas para evitar erros internos como seguir a si mesmo ou seguir alguém que nem existe
         if (reqUser === id) {
             return res.status(400).json({ error: 'You cannot follow yourself.' });
         }
 
-        // Busca o usuário que está sendo seguido
+        // Verificando se o usuário existe
         const userFollowed = await User.findById(id);
         if (!userFollowed) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        // Adiciona o ID da pessoa que está sendo seguida no array 'following' do usuário
+        // Adicionando o ID da pessoa que está sendo seguida no array 'following' do usuário
         await User.findByIdAndUpdate(reqUser, { $addToSet: { following: id } }); //addToSet adiciona um dado no mongo
 
-        // Adiciona o ID do usuário no array 'followers' da pessoa que está sendo seguida
+        // Adicionando o ID do usuário no array 'followers' da pessoa que está sendo seguida
         await User.findByIdAndUpdate(id, { $addToSet: { followers: reqUser } });
 
-        res.status(200).json({ message: `Now you are following ${userFollowed.username}.` });
+        res.status(200).json({ message: `Now you are following ${userFollowed.username}.` }); //Mensagem personalizada, bom para usar no frontend no futuro
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error following user.' });
