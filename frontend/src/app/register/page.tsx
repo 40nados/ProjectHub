@@ -95,13 +95,9 @@ const register = () => {
                                 id='lenguage'
                                 name='lenguage'
                                 className="bg-[var(--secondary)] rounded-lg p-2 mt-2"
-<<<<<<< HEAD
                                 placeholder="Set your native lenguage"
                                 required aria-required={true}
                                 disabled={true}
-=======
-                                placeholder="Set your native language"
->>>>>>> f080251de4e85029a657f1e8ed2076197079137b
                             ></input>
                         </div>
 
