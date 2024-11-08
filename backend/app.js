@@ -60,7 +60,7 @@ app.use(cors());
 
 //ROUTES
 
-app.get('/', authenticateJWT, (req, res) => {
+app.get('/', (req, res) => {
     res.send({ message: 'Hello World!', user: req.user, headers: req.headers });
 });
 
