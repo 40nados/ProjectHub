@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 interface IConfig{
     method: string,
     headers: any,
-    body?: any
+    body?: any,
+    next?: { revalidate: number }
 }
 
 
@@ -17,15 +18,17 @@ export async function api(method: string, url: string, body?: any) {
     try {
         let config: IConfig = {
             method: method,
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token.value}`},
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token.value}`
+            },
+            next: { revalidate: 60 }
         }
 
         if(method != 'GET'){
             config.body = body ? JSON.stringify(body) : JSON.stringify({})
         }
-
-        console.log(link);
-        console.log(config);
+        
         resposta = await fetch(link, config)
 
         if (resposta.ok) {
