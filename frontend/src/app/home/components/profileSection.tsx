@@ -1,6 +1,5 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 type profileSectionProps = {
     user: any
@@ -13,7 +12,7 @@ export default function ProfileSection({ user }: profileSectionProps) {
             <div className='flex w-full items-center'>
                 <div id='circlePhoto' className='ml-3 h-20 w-20 rounded-full bg-[var(--foreground)] flex flex-col justify-center items-center overflow-hidden'>
                     {user?.user_photo 
-                        ? <Image src={user.user_photo} alt='user photo'/>
+                        ? <img src={user.user_photo} alt='user photo'/>
                         : <p className='text-[var(--background)] text-sm'>PHOTO</p>
                     }
                 </div>
