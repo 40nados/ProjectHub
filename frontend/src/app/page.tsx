@@ -27,7 +27,7 @@ export default function Home() {
             if (index >= fullText.length) {
                 clearInterval(interval);
             }
-        }, 50); // Velocidade
+        }, 5); // Velocidade
         return () => clearInterval(interval);
     }, [fullText]);
 
