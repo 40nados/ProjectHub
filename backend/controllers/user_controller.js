@@ -10,7 +10,13 @@ async function getUserById(id) {
     try {
         //select com "-" exclui um atributo;
         //sect sem "-" adiciona apenas os que forem colocados no select
-        return await User.findById(id).select('-password').populate('chats').exec();
+        return await User.findById(id).select('-password').populate({
+            path: 'chats',
+            populate: {
+                path: 'users',
+                select: 'username user_photo'
+            }
+        }).exec();
     } catch (err) {
         console.log('error', err);
         return { error: 'Server Internal Error', status: 500 };

@@ -24,11 +24,11 @@
         --input: #e1e7e9;
         --ring: #1b0a00;
         --radius: 0.5rem;
-        --chart-1: #d35400;
-        --chart-2: #1f6f63;
-        --chart-3: #224e61;
-        --chart-4: #ffab5a;
-        --chart-5: #ffad45;
+        --chart-1: #4c8bf5;
+        --chart-2: #3ba688;
+        --chart-3: #d57d32;
+        --chart-4: #ab4fe2;
+        --chart-5: #e61d5f;
     }
 
     .dark {
@@ -39,7 +39,7 @@
         --popover: #1b0a00;
         --popover-foreground: #d9e5f8;
         --primary: #2a2c2e;
-        --primary-foreground: #f4f4f4;
+        --primary-foreground: #b3afaf;
         --secondary: #3b3b3c;
         --secondary-foreground: #cecece;
         --muted: #2a2c33;
@@ -67,6 +67,20 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+.scroll-messages::-webkit-scrollbar {
+    width: 10px
+}
+
+.scroll-messages::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-foreground);
+    border-radius: 5px;
+}
+
+.scroll-messages::-webkit-scrollbar-track {
+    background-color: var(--background);
+    border-radius: 5px;
 }
 
 /* ANIMAÇÃO PARA DIGITAÇÃO DA TELA DE APRESENTAÇÃO DO SITE */
@@ -112,8 +126,7 @@
     }
 }
 
-h1,
-p {
+h1{
     color: white;
 }
 

@@ -21,8 +21,7 @@ const authenticateJWT = require('./middlewares/auth');
 const { loginUserValidation, createUserValidation } = require('./middlewares/userValidation');
 const validate = require('./middlewares/handleValidation');
 
-// const http = require('http');
-// const socketIo = require('socket.io');
+const http = require('http');
 
 //Servers Configs
 const app = express();
@@ -37,32 +36,26 @@ app.use(cors());
 
 //Socket
 
-// const server = http.createServer(app);
-// const io = socketIo(server);
+const server = http.createServer(app);
+// const io = require('socket.io')(server, {
+//     cors: {
+//         origin: "*",
+//         methods: ["GET", "POST"]
+//     }
+// });
 
-//  io.on('connection', (socket) => {
-//   console.log('Novo cliente conectado:', socket.id);
+// WebSocket com suporte a Rooms
+// io.on("connection", (socket) => {
+//     console.log("Novo cliente conectado:", socket.id);
+//     console.log("Clientes conectados:", io.engine.clientsCount);
 
-//   socket.on('joinRoom', (room) => {
-//     socket.join(room);
-//     console.log(`Cliente ${socket.id} entrou na sala ${room}`);
-//   });
-
-//   socket.on('message', (data) => {
-//     const { room, message } = data;
-//     io.to(room).emit('message', { id: socket.id, message });
-//   });
-
-//   socket.on('disconnect', () => {
-//     console.log('Cliente desconectado:', socket.id);
-//   });
+//     socket.on("disconnect", () => {
+//         console.log("Cliente desconectado:", socket.id);
+//         console.log("Clientes conectados:", io.engine.clientsCount);
+//     });
 // });
 
 //ROUTES
-
-app.get('/', (req, res) => {
-    res.send({ message: 'Hello World!', user: req.user, headers: req.headers });
-});
 
 app.post('/register', createUserValidation(), validate, async (req, res) => {
     try {
@@ -215,7 +208,7 @@ app.use(publication_routes);
 db.connectToDatabase()
     .then(() => {
         console.log('Connecting MongoDb...');
-        app.listen(port, () => {
+        server.listen(port, () => {
             console.log(`Servidor rodando na porta ${port}`);
         });
     })
