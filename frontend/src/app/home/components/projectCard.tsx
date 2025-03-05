@@ -16,11 +16,11 @@ export default function ProjectCard({ publication }: projectCardProps) {
                     className="ml-5 h-10 w-10 rounded-full bg-[var(--foreground)] flex flex-col
                 justify-center items-center overflow-hidden min-w-10"
                 >
-                    <img src={publication.url} alt="publication photo" />
+                    <img src={publication.user.user_photo} alt="publication photo" />
                 </div>
                 <div className="flex flex-col ml-2">
                     <p className="text-[var(--foreground)] overflow-hidden h-6">
-                        {publication.username || ''}
+                        {publication.user.username || ''}
                     </p>
                     <p className="text-[var(--secondary-foreground)] overflow-hidden h-6">
                         {publication.title || ''}
@@ -49,7 +49,7 @@ export default function ProjectCard({ publication }: projectCardProps) {
                     className="ml-5 h-10 w-10 rounded-full bg-[var(--foreground)] flex flex-col
                 justify-center items-center overflow-hidden min-w-10"
                 >
-                    <img src={publication.url} alt="publication photo" />
+                    <img src={publication.user.user_photo} alt="publication photo" />
                 </div>
                 <div className="flex flex-col ml-3 w-10/12">
                     <input
