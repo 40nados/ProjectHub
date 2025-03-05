@@ -39,9 +39,9 @@ const login = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        
+
         try {
-            const response = await api('POST', '/login', {username, password});
+            const response = await api('POST', '/login', { username, password });
 
             if (response.id && response.accessToken) {
                 await deleleCookies();

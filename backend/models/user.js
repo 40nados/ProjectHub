@@ -14,6 +14,7 @@ const user = new mongoose.Schema({
     chats: [{ type: String, ref: 'Chat' }],
     following: [{ type: String, ref: 'User' }],
     followers: [{ type: String, ref: 'User' }],
+    /*publications: [{ type: String, ref: 'Publication' }],*/
     color: { type: String },
 });
 

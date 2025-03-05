@@ -22,7 +22,6 @@ const InsertPublication = async (req, res) => {
         technologies,
         project_link,
         userId: user.id,
-        userName: user.username,
         url: imageUrl,
     });
 
