@@ -6,16 +6,18 @@ import ContactList from './components/contactList';
 import { api } from '@/lib/api';
 import { cookies } from 'next/headers';
 
+
 export default async function Home() {
     // const userData = await api('GET', `/user/`);
     // console.log('userData', userData);
     const dataCookies = cookies().get('userId') || { name: '', value: '' };
+    const userId = dataCookies?.value;
     console.log('dataCookies', dataCookies);
 
-    const user = await api('GET', `/user/${dataCookies?.value}`);
+    const user = userId ? await api('GET', `/user/${userId}`) : null;
     console.log(user);
 
-    const publications = await api('GET', `/publication/`);
+    const publications = await api('GET', `/publication/`) || [];
     console.log(publications)
 
     return (
@@ -26,11 +28,12 @@ export default async function Home() {
                     <ProfileSection user={user} />
                 </article>
                 <article id='home_projects' className='w-1/2 flex flex-col overflow-auto h-[90vh]'>
-                    {publications.map((publication: any) =>
-                        <div key={publication.id}><ProjectCard publication={publication} /> </div>)}
+                    {publications?.map((publication: any) =>
+                        <div key={publication.id}><ProjectCard publication={publication} /> </div>)
+                    }
                 </article>
                 <article id='home_messegen' className=' w-1/4 flex flex-col items-center'>
-                    <ContactList user={user}/>
+                    <ContactList user={user} />
                 </article>
             </main>
         </>

@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { FaHeart, FaComment } from 'react-icons/fa';
 import Image from 'next/image';
 
 type projectCardProps = {
@@ -30,8 +31,8 @@ export default function ProjectCard({ publication }: projectCardProps) {
                 <img src={publication.url} alt="publication photo" />
                 <div className="flex justify-between items-center text-[var(--secondary-foreground)] w-full text-sm">
                     <div className="flex justify-around overflow-hidden w-[20%] h-6">
-                        <p>H</p>
-                        <p>C</p>
+                        <FaHeart size={20} color="red" />
+                        <FaComment size={20} color="var(--secondary-foreground)" />
                         <p>{publication.comments.length}</p>
                     </div>
                     <div className="overflow-hidden w-[60%] h-6 text-center">

@@ -3,7 +3,7 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 
 async function listAllChats() {
-    return await Chat.find();
+    return await Chat.find().populate('users', 'username user_photo').exec();
 }
 
 async function getChatById(id) {

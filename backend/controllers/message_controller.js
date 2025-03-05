@@ -10,6 +10,7 @@ async function getMessages(chatId, limit, offset) {
             .skip(offset)
             .limit(limit)
             .sort([['createdAt', -1]])
+            .populate('sender', '_id username email language user_photo')
             .exec();
         return result;
     } catch (error) {
