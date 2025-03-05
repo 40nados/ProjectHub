@@ -12,28 +12,22 @@ type messagesProps = {
     friend: any
 }
 
-// const socket = io("http://localhost:8081", {
-//     auth: {
-//         token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiUGFibG8iLCJpYXQiOjE3MzYzNDM2OTksImV4cCI6MTczNjM0NzI5OX0.swRhTJVC9Nh2iLwyOzjXwSL5cRxBhVeY37OPwnP7N7U'
-//     }
-// });
-
 export default function Messages({ chat, me, friend }: messagesProps) {
     const [messages, setMessages] = useState<any>(null);
 
     useEffect(() => {
-        // const socket = io('http://localhost:8081');
+        const socket = io('http://localhost:8081');
 
-        // socket.on('connect', () => {
-        //     console.log('Conectado ao servidor WebSocket:', socket.id);
-        // });
+        socket.on('connect', () => {
+            console.log('Conectado ao servidor WebSocket:', socket.id);
+        });
 
-        // return () => {
-        //     setTimeout(() => {
-        //         socket.disconnect();
-        //         console.log("Desconectado do servidor WebSocket:", socket.id);
-        //     }, 1000); // Desconecta após 1 segundo, se necessário
-        // };
+        return () => {
+            setTimeout(() => {
+                socket.disconnect();
+                console.log("Desconectado do servidor WebSocket:", socket.id);
+            }, 1000); // Desconecta após 1 segundo, se necessário
+        };
 
     }, []);
 
