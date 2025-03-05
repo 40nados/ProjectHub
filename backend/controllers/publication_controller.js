@@ -21,8 +21,7 @@ const InsertPublication = async (req, res) => {
         description,
         technologies,
         project_link,
-        userId: user.id,
-        userName: user.username,
+        user: user.id,
         url: imageUrl,
     });
 
@@ -44,15 +43,15 @@ const DeletePublication = async (req, res) => {
     const reqUser = req.body.userId;
     try {
         const publication = await Publication.findById(id);
-
+        
         //Publication dosn't exist - Foto Não existe
         if (!publication) {
             res.status(404).json({ error: 'Publication not found' });
             return;
         }
-
+        
         //Publication belongs to user - Publicação pertence ao usuário
-        if (publication.userId != reqUser) {
+        if (publication.user != reqUser) {
             res.status(422).json({ error: "You can't delete this publication" });
             return;
         }
@@ -92,6 +91,7 @@ const DeletePublication = async (req, res) => {
 //GetAllPublications
 const GetAllPublications = async (req, res) => {
     const publications = await Publication.find({})
+        .populate('user', 'username user_photo')
         .sort([['createdAt', -1]])
         .exec();
 
@@ -102,7 +102,8 @@ const GetAllPublications = async (req, res) => {
 const GetUserPublications = async (req, res) => {
     const { id } = req.params;
 
-    const publications = await Publication.find({ userId: id })
+    const publications = await Publication.find({ user: id })
+        .populate('user', 'username user_photo')
         .sort([['createdAt', -1]])
         .exec();
 
@@ -144,7 +145,7 @@ const UpdatePublication = async (req, res) => {
     }
 
     //Publication belongs to user - Publicação pertence ao usuário
-    if (publication.userId != reqUser) {
+    if (publication.user != reqUser) {
         res.status(422).json({ error: "You can't edit this publication" });
         return;
     }
@@ -204,7 +205,7 @@ const Likes = async (req, res) => {
         );
 
         await publication.save();
-        res.status(200).json({ publication: id, userId: reqUser, message: 'Desliked' });
+        res.status(200).json({ publication: id, user: reqUser, message: 'Desliked' });
         return;
     } else {
         publication.likes.push(reqUser);
@@ -213,7 +214,7 @@ const Likes = async (req, res) => {
 
         res.status(200).json({
             publication: id,
-            userId: reqUser,
+            user: reqUser,
             message: 'Publication Liked!',
         });
     }
@@ -241,7 +242,7 @@ const Comment = async (req, res) => {
         comment,
         userName: user.username,
         userImage: user.user_photo,
-        userId: user.id,
+        user: user.id,
     };
 
     publication.comments.push(userComment);

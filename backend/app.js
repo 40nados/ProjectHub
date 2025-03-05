@@ -37,23 +37,23 @@ app.use(cors());
 //Socket
 
 const server = http.createServer(app);
-// const io = require('socket.io')(server, {
-//     cors: {
-//         origin: "*",
-//         methods: ["GET", "POST"]
-//     }
-// });
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
 // WebSocket com suporte a Rooms
-// io.on("connection", (socket) => {
-//     console.log("Novo cliente conectado:", socket.id);
-//     console.log("Clientes conectados:", io.engine.clientsCount);
+io.on("connection", (socket) => {
+    console.log("Novo cliente conectado:", socket.id);
+    console.log("Clientes conectados:", io.engine.clientsCount);
 
-//     socket.on("disconnect", () => {
-//         console.log("Cliente desconectado:", socket.id);
-//         console.log("Clientes conectados:", io.engine.clientsCount);
-//     });
-// });
+    socket.on("disconnect", () => {
+        console.log("Cliente desconectado:", socket.id);
+        console.log("Clientes conectados:", io.engine.clientsCount);
+    });
+});
 
 //ROUTES
 

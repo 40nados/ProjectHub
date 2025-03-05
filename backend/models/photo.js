@@ -7,7 +7,7 @@ const photoSchema = new mongoose.Schema(
     userId: { type: String, default: uuidv4 },
     url: { type: String, required: true }, //Será pego no S3
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 let Photo = mongoose.model("Photo", photoSchema);
