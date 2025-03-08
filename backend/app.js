@@ -47,11 +47,23 @@ const io = require('socket.io')(server, {
 // WebSocket com suporte a Rooms
 io.on("connection", (socket) => {
     console.log("Novo cliente conectado:", socket.id);
-    console.log("Clientes conectados:", io.engine.clientsCount);
+
+    socket.on("joinRoom", (room) => {
+        socket.join(room);
+        console.log(`Usuário ${socket.id} entrou na sala ${room}`);
+    });
+
+    socket.on("leaveRoom", (room) => {
+        socket.leave(room);
+        console.log(`Usuário ${socket.id} saiu da sala ${room}`);
+    });
+
+    socket.on("sendMessage", (message) => {
+        io.to(message.chat).emit("receiveMessage", message);
+    });
 
     socket.on("disconnect", () => {
         console.log("Cliente desconectado:", socket.id);
-        console.log("Clientes conectados:", io.engine.clientsCount);
     });
 });
 

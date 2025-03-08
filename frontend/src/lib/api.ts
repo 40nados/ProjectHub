@@ -10,6 +10,7 @@ interface IConfig {
 
 const BASE_URL = "http://localhost:8081";
 
+
 export async function api(method: string, url: string, body?: any) {
     console.log('[API LOG]: ', {
         method: method,
