@@ -87,7 +87,7 @@ app.post('/register', createUserValidation(), validate, async (req, res) => {
             message: 'User created successfully! Verify your email address to activate account.',
         });
     } catch (error) {
-        console.error(error);
+        //console.error(error);
         res.status(500).json({ error: 'Error to create user.' });
     }
 });
@@ -215,5 +215,18 @@ db.connectToDatabase()
     .catch((erro) => {
         console.log(`Erro ao conectar ao banco de dados: ${erro}`);
     });
+
+/*if (process.env.NODE_ENV !== 'test') {
+    db.connectToDatabase()
+        .then(() => {
+            console.log('Connecting MongoDb...');
+            app.listen(port, () => {
+                console.log(`Servidor rodando na porta ${port}`);
+            });
+        })
+        .catch((erro) => {
+            console.log(`Erro ao conectar ao banco de dados: ${erro}`);
+        });
+}*/
 
 module.exports = { app };

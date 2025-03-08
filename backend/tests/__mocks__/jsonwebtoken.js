@@ -1,5 +1,6 @@
+// tests/mocks/jwtMock.js
 const jwt = {
-    sign: jest.fn().mockReturnValue('mockedAccessToken'),
+    sign: jest.fn(),
 };
 
 module.exports = jwt;

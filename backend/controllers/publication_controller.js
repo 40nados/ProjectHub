@@ -43,15 +43,17 @@ const DeletePublication = async (req, res) => {
     const reqUser = req.body.userId;
     try {
         const publication = await Publication.findById(id);
-        
+
         //Publication dosn't exist - Foto Não existe
         if (!publication) {
             res.status(404).json({ error: 'Publication not found' });
             return;
         }
-        
+
         //Publication belongs to user - Publicação pertence ao usuário
         if (publication.user != reqUser) {
+            /*console.log(publication.userId);
+            console.log(reqUser);*/
             res.status(422).json({ error: "You can't delete this publication" });
             return;
         }
