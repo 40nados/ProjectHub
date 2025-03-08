@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
-import { setCookie, deleleCookies } from '@/lib/setCookie';
+import { setCookie, deleteCookies } from '@/lib/setCookie';
 
 //Icons
 import { FaArrowLeft } from 'react-icons/fa';
@@ -44,7 +44,7 @@ const login = () => {
             const response = await api('POST', '/login', { username, password });
 
             if (response.id && response.accessToken) {
-                await deleleCookies();
+                await deleteCookies();
                 await setCookie('accessToken', response.accessToken);
                 await setCookie('userId', response.id);
 
