@@ -1,11 +1,19 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { api } from '@/lib/api';
 import { HiDotsVertical } from "react-icons/hi";
 import { LuSend, LuMic } from "react-icons/lu";
 import { IoImageOutline } from "react-icons/io5";
 import { io } from "socket.io-client";
 
+/**
+ * chat: {_id, messages, name, users}
+ * me: id do usuario
+ * friend: ids dos amigos do chat
+ * 
+ * messages: array[ids]
+ * users: array[{_id, username, user_photo}]
+ */
 type messagesProps = {
     chat: any,
     me: string,
@@ -14,22 +22,35 @@ type messagesProps = {
 
 export default function Messages({ chat, me, friend }: messagesProps) {
     const [messages, setMessages] = useState<any>(null);
+    const [currentMessage, setCurrentMessage] = useState<string>('');
+    const socketRef = useRef<any>(null);
 
     useEffect(() => {
+        if(!chat?._id) return;
+
+
         const socket = io('http://localhost:8081');
+        socketRef.current = socket;
 
         socket.on('connect', () => {
             console.log('Conectado ao servidor WebSocket:', socket.id);
+
+            socket.emit('joinRoom', chat._id);
+        });
+
+        socket.on('receiveMessage', (newmessage) => {
+            setMessages((prevMessages: any) => prevMessages ? [...prevMessages, newmessage] : [newmessage]);
         });
 
         return () => {
             setTimeout(() => {
+                socket.emit('leaveRoom', chat._id);
                 socket.disconnect();
                 console.log("Desconectado do servidor WebSocket:", socket.id);
             }, 1000); // Desconecta após 1 segundo, se necessário
         };
 
-    }, []);
+    }, [chat]);
 
     useEffect(() => {
         api('GET', `/message/${chat?._id}?limit=10&page=1`).then((result) => {
@@ -37,6 +58,24 @@ export default function Messages({ chat, me, friend }: messagesProps) {
             setMessages(result.reverse());
         })
     }, [chat, me]);
+
+    const handleKeyDown = (e: any) => {
+        if (e.key === 'Enter' && currentMessage.trim() !== '') {
+            e.preventDefault();
+            console.log('Mensagem enviada:', currentMessage);
+            
+            const newMessage = {
+                chat: chat._id,
+                sender: { _id: me, username: "Teste" }, // Você pode melhorar isso
+                content: currentMessage,
+                createdAt: new Date(),
+            };
+        
+            socketRef.current?.emit("sendMessage", newMessage);
+        
+            setCurrentMessage('');
+        }
+    };
 
     const showMessages = messages?.map((message: any, index: number) => {
         let bg, align, margin;
@@ -92,7 +131,7 @@ export default function Messages({ chat, me, friend }: messagesProps) {
                     </div>
                 </div>
                 <div>
-                    <HiDotsVertical/>
+                    <HiDotsVertical />
                 </div>
             </header>
             <div className='w-full mt-3 p-3 overflow-y-auto flex-1'>
@@ -101,7 +140,10 @@ export default function Messages({ chat, me, friend }: messagesProps) {
             <footer className='w-full flex justify-center text-[16px] p-3'>
                 <div id='input-message' className='h-8 w-full border-white border-[1px] rounded-sm flex justify-around items-center'>
                     <LuSend size={20} />
-                    <input placeholder='Escreva sua mensagem' className='w-3/4 focus:outline-none' />
+                    <input placeholder='Escreva sua mensagem' className='w-3/4 focus:outline-none'
+                        value={currentMessage} onChange={(e) => setCurrentMessage(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
                     <LuMic size={20} />
                     <IoImageOutline size={20} />
                 </div>
